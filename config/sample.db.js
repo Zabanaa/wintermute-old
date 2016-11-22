@@ -1,4 +1,6 @@
-module.exports = {
-    production_url: "YOUR_PRODUCTION_DB_URL",
-    test_db_url: "YOUR_TESTING_DB_URL"
+module.exports =  db = {
+    production_url: "mongodb://localhost/wintermute",
+    test_db_url: "mongodb://localhost/wintermute_test"
 }
+
+
