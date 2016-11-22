@@ -4,8 +4,12 @@ const app               = express()
 const bodyParser        = require('body-parser')
 const mainEndpoints     = require('./app/routes')
 const apiEndpoints      = require('./app/routes/api')
+const mongoose          = require('mongoose')
+const config            = require('./config/db')
 const port              = process.env.PORT || 3000
 
+// Connect to DB
+mongoose.connect(config.test_db_url)
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}))
