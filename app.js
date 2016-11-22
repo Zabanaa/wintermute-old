@@ -1,22 +1,24 @@
 // Add comment
 // Imports
-const express       = require('express')
-const bodyParser    = require('body-parser')
-const app           = express()
-const port          = process.env.PORT || 3000
-const api           = require('./app/routes/api')
+const express           = require('express')
+const app               = express()
+const bodyParser        = require('body-parser')
+const mainEndpoints     = require('./app/routes')
+const apiEndpoints      = require('./app/routes/api')
+const port              = process.env.PORT || 3000
+
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
-// Routes
-app.get('/', (req, res) => res.send("hello world"))
-app.get('/contact', (req, res) => res.send("contact me"))
-
-// api routes
+// Endpoints
+app.use(mainRoutes)
 app.use('/api', api)
 
 
 // Start app
+// app.listen takes also a config object containing the host and the port in case we want
+// to chage those
+
 app.listen(port, () => console.log(`App started. Server listening on port ${port}`))
