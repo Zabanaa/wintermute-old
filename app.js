@@ -12,8 +12,8 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 // Endpoints
-app.use(mainRoutes)
-app.use('/api', api)
+app.use(mainEndpoints)
+app.use('/api', apiEndpoints)
 
 
 // Start app
@@ -21,3 +21,5 @@ app.use('/api', api)
 // to chage those
 
 app.listen(port, () => console.log(`App started. Server listening on port ${port}`))
+
+module.exports = app
