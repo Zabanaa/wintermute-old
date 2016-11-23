@@ -40,3 +40,29 @@ describe("Test GET /api/characters/:id", () => {
             })
     })
 })
+
+describe("Test POST /api/characters/", () => {
+
+    it("successfully saves the resource to the DB", (done) => {
+
+        request.post('/api/characters')
+            .end( (err, res) => {
+                assert.isFalse(res.error)
+                assert.equal(res.statusCode, 201)
+                done()
+            })
+    })
+
+    it("Gracefully deals with the validation errors", (done) => {
+
+        request.post('/api/characters')
+            .end( (err, res) => {
+                assert.isFalse(res.error)
+                assert.equal(res.statusCode, 201)
+                done()
+            })
+    })
+
+})
+
+
