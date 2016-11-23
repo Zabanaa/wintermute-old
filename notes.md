@@ -2,12 +2,14 @@
 
 ## Characters
 
-GET     /api/characters
-GET     /api/charcaters/<id>
-POST    /api/characters
-PUT     /api/characters/<id>
-PATCH   /api/characters/<id>
-DELETE  /api/characters/<id>
+- [x] GET     /api/characters
+- [x] GET     /api/charcaters/<id>
+- [x] POST    /api/characters
+- [ ] PUT     /api/characters/<id>
+- [ ] PATCH   /api/characters/<id>
+- [ ] DELETE  /api/characters/<id>
+
+
 
 ## Author
 
