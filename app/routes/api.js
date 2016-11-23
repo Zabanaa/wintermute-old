@@ -13,4 +13,20 @@ router.get('/characters', (req, res) => {
     })
 })
 
+// GET /api/characters
+router.get('/characters/:id', (req, res) => {
+
+    let characterId = req.params.id
+
+    Character.findOne({"_id": req.params.id}, (err, character) => {
+        if (err) throw err
+        res.status(200)
+        res.json(character)
+    })
+})
+
+// POST /api/characters
+// after the resource is successfully saved, we alter the object and return it to the user
+
+
 module.exports = router
