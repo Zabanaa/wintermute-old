@@ -4,10 +4,9 @@ const app       = require('../app')
 const assert    = chai.assert
 
 chai.use(chaiHttp)
+let request = chai.request(app)
 
 describe("Test GET /api/characters", () => {
-
-    let request = chai.request(app)
 
     it("returns an array of characters", (done) => {
 
@@ -26,14 +25,12 @@ describe("Test GET /api/characters", () => {
 
 describe("Test GET /api/characters/:id", () => {
 
-    let request     = chai.request(app)
     let characterId = "583460b6f0d1cd1d76f437d0"
 
     it("returns the corresponding character based on the id", (done) => {
 
         request.get(`/api/characters/${characterId}`)
             .end( (err, res) => {
-
                 assert.isFalse(res.error)
                 assert.equal(res.statusCode, 200)
                 assert.isObject(res.body)
