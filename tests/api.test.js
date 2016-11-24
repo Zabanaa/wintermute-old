@@ -1,4 +1,3 @@
-const mongoose  = require('mongoose')
 const app       = require('../app')
 const config    = require('../config/db')
 const Character = require('../app/models/character')
@@ -6,15 +5,12 @@ const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const assert    = chai.assert
 
-// connect to test db
-mongoose.createConnection(config.test_db_url)
-
 chai.use(chaiHttp)
 
 let request = chai.request(app)
 
-// Remove Molly from the DB
 after( () => {
+    // Remove Molly from the DB
     Character.remove({name: "Molly Millions"}, (err) => {if (err) console.log(err)})
 })
 
@@ -36,7 +32,7 @@ describe("Test GET /api/characters", () => {
 
 describe("Test GET /api/characters/:id", () => {
 
-    let characterId = "5836c030dc84b2e4a2663b78"
+    let characterId = "58371bc3cff3432834ea4ecf"
 
     it("returns the corresponding character based on the id", (done) => {
 
@@ -111,5 +107,22 @@ describe("Test POST /api/characters/", () => {
                     assert.include(res.body.fields, "novel", "name")
                     done()
                 })
+    })
+})
+
+describe("Test PUT /api/characters/id", () => {
+
+    it("returns a 200 when the update is successfully completed", (done) => {
+
+        request.put(`/api/characters/58371bc3cff3432834ea4ecf`)
+               .send({name: "Fanfan la tulipe"})
+               .end( (err, res) => {
+                   assert.equal(res.statusCode, 200)
+                   assert.equal(res.body.status, 200)
+                   assert.property(res.body, "message")
+                   assert.equal(res.body.message, "Character successfully updated")
+                   assert.property(res.body, "character")
+                   done()
+               })
     })
 })

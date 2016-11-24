@@ -55,4 +55,24 @@ router.post('/characters', (req, res) => {
     })
 })
 
+// PUT /api/characters/:id
+router.put('/characters/:id', (req, res) => {
+    // loop through the request.body object
+    // get all the keys
+    // update each corresponding key and return the new object
+
+    Character.findById(req.params.id, (err, character) => {
+
+        if(!character) {
+            utils.notFound(res)
+        }
+        else {
+            let updatedChar = utils.updateDoc(character, req.body)
+            character = updatedChar
+            character.save()
+            return res.status(200).json({status: 200, message: "Character successfully updated", character: character})
+        }
+    })
+})
+
 module.exports = router

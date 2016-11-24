@@ -23,7 +23,6 @@ app.use('/api', apiEndpoints)
 // Start app
 // app.listen takes also a config object containing the host and the port in case we want
 // to chage those
-
 app.listen(port, () => console.log(`App started. Server listening on port ${port}`))
 
 module.exports = app

@@ -19,4 +19,10 @@ const handleError = (err, res) => {
     }
 }
 
-module.exports.handleError = handleError
+const updateDoc = (doc, reqBody) => Object.assign(doc, reqBody)
+
+const notFound  = res => res.status(404).json({status: 404, error: "Character not found"})
+
+module.exports.handleError   = handleError
+module.exports.updateDoc     = updateDoc
+module.exports.notFound      = notFound
