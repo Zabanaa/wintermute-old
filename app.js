@@ -9,7 +9,7 @@ const config            = require('./config/db')
 const port              = process.env.PORT || 3000
 
 // Connect to DB
-mongoose.connect(config.test_db_url)
+mongoose.connect(config.production_url)
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}))
