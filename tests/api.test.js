@@ -112,16 +112,35 @@ describe("Test POST /api/characters/", () => {
 
 describe("Test PUT /api/characters/id", () => {
 
-    it("returns a 200 when the update is successfully completed", (done) => {
+    it("returns a 400 when passing an incomplete payload", (done) => {
 
         request.put(`/api/characters/58371bc3cff3432834ea4ecf`)
                .send({name: "Fanfan la tulipe"})
+               .end( (err, res) => {
+                   assert.equal(res.statusCode, 400)
+                   assert.equal(res.body.status, 400)
+                   assert.property(res.body, "error")
+                   assert.equal(res.body.error, "Bad request. Please provide all the fields (even those you do not wish to update)")
+                   done()
+               })
+    })
+
+    it("returns a 200 when passing a complete payload", (done) => {
+
+        request.put(`/api/characters/58371bc3cff3432834ea4ecf`)
+               .send({
+                   name: "Fanfan la tulipe",
+                   age: "23",
+                   bio: "The best ever",
+                   birthPlace: "Somewhere in the sprawl",
+                   occupation: "Niksamair",
+                   novel: "Fanfan la tulipe"
+               })
                .end( (err, res) => {
                    assert.equal(res.statusCode, 200)
                    assert.equal(res.body.status, 200)
                    assert.property(res.body, "message")
                    assert.equal(res.body.message, "Character successfully updated")
-                   assert.property(res.body, "character")
                    done()
                })
     })
