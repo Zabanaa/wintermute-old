@@ -1,11 +1,13 @@
-// Compare objects
-// filter the document object
-// return it stripped from _id and __v and href
-// compare the keys
-// if they don't perfectly match return false (which will be picked up by the controller to return a 400 bad request)
-// else return true (in which case the controller will return a 200 with a message of (sucess along with the updated object)
-// try to attach it to the model itself
-// else just create a private function
+const assertIdenticalObjects = (doc, requestBody) => {
+
+    if(!requestBody && typeof(requestBody) !== "object") {
+        throw new Error("Function must be passed an object")
+    }
+
+    let docKeys         = Object.keys(doc).filter( key => key !== "_id" && key !== "__v" && key !== "href").sort()
+    let reqBodyKeys     = Object.keys(requestBody).sort()
+    return JSON.stringify(docKeys) === JSON.stringify(reqBodyKeys)
+}
 
 const handleError = (err, res) => {
 
@@ -32,6 +34,7 @@ const updateDoc = (doc, reqBody) => Object.assign(doc, reqBody)
 
 const notFound  = res => res.status(404).json({status: 404, error: "Character not found"})
 
-module.exports.handleError   = handleError
-module.exports.updateDoc     = updateDoc
-module.exports.notFound      = notFound
+module.exports.handleError                   = handleError
+module.exports.updateDoc                     = updateDoc
+module.exports.notFound                      = notFound
+module.exports.assertIdenticalObjects        = assertIdenticalObjects
