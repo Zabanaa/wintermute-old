@@ -1,3 +1,12 @@
+// Compare objects
+// filter the document object
+// return it stripped from _id and __v and href
+// compare the keys
+// if they don't perfectly match return false (which will be picked up by the controller to return a 400 bad request)
+// else return true (in which case the controller will return a 200 with a message of (sucess along with the updated object)
+// try to attach it to the model itself
+// else just create a private function
+
 const handleError = (err, res) => {
 
     if (err.code === 11000) { // Duplicate Key Constraint
