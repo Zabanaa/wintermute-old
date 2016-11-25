@@ -1,18 +1,12 @@
 const express       = require('express')
-const Character     = require('../models/character')
 const router        = express.Router()
 const utils         = require('./utils')
-
-const serialise     = (obj, url) => {
-    return obj['href'] = url
-}
-
-router.get('/', (req, res) => res.send("Welcome to the api"))
+const Character     = require('../models/character')
 
 // GET /api/characters
 router.get('/characters', (req, res) => {
     Character.find({}, (err, characters) => {
-        if (err) throw err
+        if (err) console.log(err)
         res.status(200)
         res.json(characters)
     })
@@ -57,9 +51,6 @@ router.post('/characters', (req, res) => {
 
 // PUT /api/characters/:id
 router.put('/characters/:id', (req, res) => {
-    // loop through the request.body object
-    // get all the keys
-    // update each corresponding key and return the new object
 
     Character.findById(req.params.id, (err, character) => {
 
@@ -67,6 +58,7 @@ router.put('/characters/:id', (req, res) => {
             utils.notFound(res)
         }
         else {
+            // if req.body.keys === character.keys
             let updatedChar = utils.updateDoc(character, req.body)
             character = updatedChar
             character.save()
