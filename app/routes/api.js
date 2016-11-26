@@ -53,7 +53,6 @@ router.post('/characters', (req, res) => {
 router.put('/characters/:id', (req, res) => {
 
     Character.findById(req.params.id, (err, character) => {
-
         if(!character) utils.notFound(res)
 
         else {

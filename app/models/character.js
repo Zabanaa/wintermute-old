@@ -41,7 +41,7 @@ character.methods.isIdenticalTo = function(requestBody) {
 */
 
 character.methods.update = function(requestBody) {
-    return Object.assign(this._doc, requestBody)
+    return Object.assign(this, requestBody)
 }
 
 // Create a model out of the schema
