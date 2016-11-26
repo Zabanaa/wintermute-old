@@ -6,7 +6,7 @@ const handleError = (err, res) => {
         fieldName       = fieldName.split(" dup key")[0]
         fieldName       = fieldName.substring(0, fieldName.lastIndexOf("_"))
         errorMsg        = `A Character with this ${fieldName} already exists`
-        return res.status(422).json({status: 422, error: errorMsg })
+        return res.status(409).json({status: 409, error: errorMsg })
     }
 
     else if (err.message.includes(" validation failed")) { // Missing fields

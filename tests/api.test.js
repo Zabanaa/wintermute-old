@@ -77,13 +77,13 @@ describe("Test POST /api/characters/", () => {
                 })
     })
 
-    it("Returns a 422 when passed an already existing character", (done) => {
+    it("Returns a 409 when passed an already existing character", (done) => {
 
         request.post('/api/characters')
                 .send(character)
                 .end( (err, res) => {
-                    assert.equal(res.statusCode, 422)
-                    assert.equal(res.body.status, 422)
+                    assert.equal(res.statusCode, 409)
+                    assert.equal(res.body.status, 409)
                     assert.equal(res.body.error, "A Character with this name already exists")
                     done()
                 })
