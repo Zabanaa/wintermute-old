@@ -120,7 +120,7 @@ describe("Test PUT /api/characters/id", () => {
                    assert.equal(res.statusCode, 400)
                    assert.equal(res.body.status, 400)
                    assert.property(res.body, "error")
-                   assert.equal(res.body.error, "Bad request. Please provide all the fields (even those you do not wish to update)")
+                   assert.equal(res.body.error, "Bad request. Please provide all the fields.")
                    done()
                })
     })
