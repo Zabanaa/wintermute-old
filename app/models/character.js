@@ -44,6 +44,26 @@ character.methods.update = function(requestBody) {
     return Object.assign(this, requestBody)
 }
 
+/*
+ *   Get Updated Fields
+ *
+ *   we need to loop through the current doc
+ *   if so assign the value of the key to a new object
+ *   else skip
+ *   return the new object
+*/
+
+character.methods.getUpdatedFields = function(requestBody){
+
+    let updatedFields = {}
+    for (let key in this._doc) {
+        if (Object.keys(requestBody).includes(key) ) {
+            updatedFields[key] = this._doc[key]
+        }
+    }
+    return updatedFields
+}
+
 // Create a model out of the schema
 const Character     = mongoose.model('Character', character)
 
