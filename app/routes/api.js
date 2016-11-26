@@ -53,19 +53,46 @@ router.post('/characters', (req, res) => {
 router.put('/characters/:id', (req, res) => {
 
     Character.findById(req.params.id, (err, character) => {
+
         if(!character) utils.notFound(res)
 
         else {
 
             if ( character.isIdenticalTo(req.body) ) {
+
                 character.update(req.body)
                 character.save()
-                return res.status(200).json({status: 200, message: "Character successfully updated", character: character})
+                return res.status(200)
+                          .json({
+                              status: 200,
+                              message: "Character successfully updated",
+                              character: character
+                          })
             }
 
             else {
                 res.status(400).json({status: 400, error: "Bad request. Please provide all the fields."})
             }
+        }
+    })
+})
+
+// PATCH /api/characters/:id
+router.patch('/characters/:id', (req, res) => {
+    Character.findById(req.params.id, (err, character) => {
+
+        let updatedFields
+
+        if (err) utils.handleError(err)
+
+        if(!character) utils.notFound(res)
+
+        else {
+
+            character.update(req.body)
+            character.save()
+            updatedFields = character.getUpdatedFields(req.body)
+            return res.status(200).json({ status: 200, message: "Character successfully updated", updatedFields})
         }
     })
 })
