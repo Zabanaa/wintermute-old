@@ -1,14 +1,3 @@
-const assertIdenticalObjects = (doc, requestBody) => {
-
-    if(!requestBody && typeof(requestBody) !== "object") {
-        throw new Error("Function must be passed an object")
-    }
-
-    let docKeys         = Object.keys(doc).filter( key => key !== "_id" && key !== "__v" && key !== "href").sort()
-    let reqBodyKeys     = Object.keys(requestBody).sort()
-    return JSON.stringify(docKeys) === JSON.stringify(reqBodyKeys)
-}
-
 const handleError = (err, res) => {
 
     if (err.code === 11000) { // Duplicate Key Constraint
@@ -30,11 +19,7 @@ const handleError = (err, res) => {
     }
 }
 
-const updateDoc = (doc, reqBody) => Object.assign(doc, reqBody)
-
 const notFound  = res => res.status(404).json({status: 404, error: "Character not found"})
 
 module.exports.handleError                   = handleError
-module.exports.updateDoc                     = updateDoc
 module.exports.notFound                      = notFound
-module.exports.assertIdenticalObjects        = assertIdenticalObjects
