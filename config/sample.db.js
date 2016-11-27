@@ -1,6 +1,7 @@
-module.exports =  db = {
-    production_url: "mongodb://localhost/wintermute",
-    test_db_url: "mongodb://localhost/wintermute_test"
-}
+const dbname         = "database name"
+const dbuser         = "database user"
+const dbhost         = "database url"
+const dbengine       = "database engine"
+const dbpassword     = "database password"
 
-
+module.exports =  { dbname, dbuser, dbpassword, dbhost, dbengine }
