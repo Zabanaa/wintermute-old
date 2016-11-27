@@ -1,3 +1,3 @@
-const config         = require('dbConfig')
+const config         = require('./dbConfig')
 
 module.exports = config
