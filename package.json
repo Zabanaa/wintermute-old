@@ -28,7 +28,9 @@
     "express": "^4.14.0",
     "mongoose": "^4.6.8",
     "pg": "^6.1.0",
-    "pug": "^2.0.0-beta6"
+    "pg-hstore": "^2.3.2",
+    "pug": "^2.0.0-beta6",
+    "sequelize": "^3.27.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
