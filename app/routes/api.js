@@ -5,7 +5,24 @@ const Character     = require('../models/character')
 
 // GET /api/characters
 router.get('/characters', (req, res) => {
-    character.findAll().then( characters => res.json(characters))
+
+    Character.findAll()
+        .then( characters => {
+            let type, statusCode, message
+            let count  = characters.length
+
+            type       = "success"
+
+            if (count === 0) {
+                statusCode = 204
+                return res.status(statusCode).end()
+            } else {
+                statusCode  = 200
+                return res.status(statusCode).json({type, statusCode, count, characters})
+            }
+
+        })
+        .catch( error => {let e = errors.handle(error); return res.status(e.statusCode).json(e.responseBody)})
 })
 
 // GET /api/characters
