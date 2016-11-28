@@ -8,8 +8,8 @@ const handle = (error) => {
     if (error.name === "SequelizeUniqueConstraintError") {
 
         statusCode          = 409
-        message         = "A resource with the following fields already exists in the database."
-        responseBody    = {type, statusCode, message, fields}
+        message             = "A resource with the following fields already exists in the database."
+        responseBody        = {type, statusCode, message, fields}
         return {statusCode, responseBody}
 
     }
@@ -17,8 +17,8 @@ const handle = (error) => {
     else if (error.message.includes("notNull Violation")) {
 
         statusCode          = 422
-        message         = "Missing required fields."
-        responseBody    = {type, statusCode, message, fields}
+        message             = "Missing required fields."
+        responseBody        = {type, statusCode, message, fields}
         return {statusCode, responseBody}
 
     }
@@ -26,8 +26,8 @@ const handle = (error) => {
     else {
 
         statusCode          = 500
-        message         = "An unexpected error occured. Please contact karim.cheurfi@gmail.com to report any issue encountered."
-        responseBody    = {type, statusCode, message}
+        message             = "An unexpected error occured. Please contact karim.cheurfi@gmail.com to report any issue encountered."
+        responseBody        = {type, statusCode, message}
         return {statusCode, responseBody}
 
     }
