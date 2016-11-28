@@ -6,6 +6,9 @@ const Character     = require('../models/character')
 // GET /api/characters
 router.get('/characters', (req, res) => {
 
+    let protocol        = req.protocol
+    let host            = req.hostname
+
     Character.findAll()
         .then( characters => {
             let type, statusCode, message
@@ -18,6 +21,7 @@ router.get('/characters', (req, res) => {
                 return res.status(statusCode).end()
             } else {
                 statusCode  = 200
+                characters.map( c => c.serialise(protocol, host, `/api/characters/${c.dataValues.id}`) )
                 return res.status(statusCode).json({type, statusCode, count, characters})
             }
 
@@ -38,7 +42,9 @@ router.get('/characters/:id', (req, res) => {
 
 // POST /api/characters
 router.post('/characters', (req, res) => {
-    let data, type, statusCode, message
+    let data, type, statusCode, message, uri
+    let protocol = req.protocol
+    let host     = req.hostname
     data = { name, age, birthPlace, bio, occupation, novel } = req.body
 
     Character.create(data)
@@ -46,6 +52,8 @@ router.post('/characters', (req, res) => {
             type       = "success"
             statusCode = 201
             message    = "Character was successfully created"
+            uri        = `/api/characters/${character.dataValues.id}`
+            character.serialise(protocol, host, uri)
             return res.status(statusCode).json({type, statusCode, message, character})
         })
         .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
