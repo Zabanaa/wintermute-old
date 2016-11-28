@@ -5,7 +5,7 @@ const Character     = require('../models/character')
 
 // GET /api/characters
 router.get('/characters', (req, res) => {
-    res.send("oejfej")
+    character.findAll().then( characters => res.json(characters))
 })
 
 // GET /api/characters
@@ -85,7 +85,7 @@ router.patch('/characters/:id', (req, res) => {
         })
 
         // :id doesn't match any record in the database -> 404 bitch where ?
-        .catch( error => { let e = errors.notFound() return res.status(e.statusCode).json(e.responseBody) })
+        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
 })
 
 module.exports = router
