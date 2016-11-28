@@ -64,28 +64,28 @@ router.put('/characters/:id', (req, res) => {
         .catch( err => res.send(err))
 })
 // PATCH /api/characters/:id
-// router.patch('/characters/:id', (req, res) => {
+router.patch('/characters/:id', (req, res) => {
 
-Character.findById(req.params.id)
-    .then( character => {
+    let data, type, statusCode, message
 
-        let data = {name, age, birthplace, bio, occupation, novel} = req.body
+    Character.findById(req.params.id)
 
-        character.update(data)
-            .then( () => {
-                return res.status(200).json({type: "success", statusCode: 200, message:"Update successful", character})
-            })
-            .catch( error => {
-                let err =  error.handle(error)
-                return res.status(err.statusCode).json(err.responseBody)
-            })
-    })
+        .then( character => {
 
-    // :id doesn't match any record in the database -> 404 bitch where ?
-    .catch( error => {
-        let response = errors.notFound()
-        return res.status(response.statusCode).json(response.responseBody)
-    })
+            data = {name, age, birthplace, bio, occupation, novel} = req.body
+
+            character.update(data)
+                .then( () => {
+                    type        = "success"
+                    statusCode  = 200
+                    message     = "Update successful"
+                    return res.status(200).json({type, statusCode, message, character})
+                })
+                .catch( error => { let e =  error.handle(error); return res.status(e.statusCode).json(e.responseBody) })
+        })
+
+        // :id doesn't match any record in the database -> 404 bitch where ?
+        .catch( error => { let e = errors.notFound() return res.status(e.statusCode).json(e.responseBody) })
 })
 
 module.exports = router
