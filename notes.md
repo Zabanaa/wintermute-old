@@ -2,13 +2,12 @@
 
 ## Characters
 
-- [x] GET     /api/characters
+- [x] GET     /api/characters // returns 204 no content if empty array
 - [x] GET     /api/charcaters/<id>
 - [x] POST    /api/characters
-- [ ] PUT     /api/characters/<id>
-- [ ] PATCH   /api/characters/<id>
+- [x] PUT     /api/characters/<id>
+- [x] PATCH   /api/characters/<id>
 - [ ] DELETE  /api/characters/<id>
-
 
 
 ## Author
