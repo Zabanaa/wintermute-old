@@ -28,27 +28,27 @@ router.get('/characters', (req, res) => {
 // GET /api/characters
 router.get('/characters/:id', (req, res) => {
 
-    let characterId = req.params.id
-
-    Character.findOne({"_id": req.params.id}, (err, character) => {
-        if (err) throw err
-        res.status(200)
-        res.json(character)
-    })
+    Character.findById(req.params.id)
+        .then( character => {
+            if (character === null) { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) }
+            return res.status(200).json(character)
+        })
+        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
 })
 
 // POST /api/characters
-// after the resource is successfully saved, we alter the object and return it to the user
 router.post('/characters', (req, res) => {
+    let data, type, statusCode, message
+    data = { name, age, birthPlace, bio, occupation, novel } = req.body
 
-    let data = { name, age, birthPlace, bio, occupation, novel } = req.body
     Character.create(data)
-        .then( character => res.status(201).json({type: "success", statusCode: 201, message: "Character was successfully created", character}))
-        .catch( error => {
-            let err = errors.handle(error)
-            return res.status(err.statusCode).json(err.responseBody)
+        .then( character => {
+            type       = "success"
+            statusCode = 201
+            message    = "Character was successfully created"
+            return res.status(statusCode).json({type, statusCode, message, character})
         })
-
+        .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
 })
 
 // PUT /api/characters/:id
@@ -78,7 +78,7 @@ router.put('/characters/:id', (req, res) => {
             }
 
         })
-        .catch( err => res.send(err))
+        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
 })
 // PATCH /api/characters/:id
 router.patch('/characters/:id', (req, res) => {
