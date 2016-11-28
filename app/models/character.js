@@ -10,6 +10,14 @@ let occupation          = {type: db.Sequelize.STRING, defaultValue: "Unknown"}
 
 let modelAttributes     = {name, novel, age, bio, birthPlace, occupation}
 
+const serialise         = function(protocol, host, resourceURI) {
+
+    // alter the instance
+    // add a href url equal to protocol + host + /api/characters/:id
+    return this.dataValues.href = `${protocol}://${host}${resourceURI}`
+}
+
+
 
 /*   character.isIdenticalTo
  *
@@ -38,6 +46,6 @@ const isIdenticalTo     = function(requestBody) {
     return JSON.stringify(characterKeys) === JSON.stringify(reqBodyKeys)
 }
 
-const Character         = db.connection.define('character', modelAttributes, { instanceMethods: {isIdenticalTo} })
+const Character     = db.connection.define('character', modelAttributes, { instanceMethods: {isIdenticalTo, serialise} })
 
 module.exports      = Character
