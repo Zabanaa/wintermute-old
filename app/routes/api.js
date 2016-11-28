@@ -39,43 +39,53 @@ router.put('/characters/:id', (req, res) => {
 
     Character.findById(req.params.id)
         .then( character => {
-            // check that the req.body.keys match the character's keys. if they don't
-            // return a 400 bad request with a message of Bad request. Please provide all // the fields.
-            let data = {name, age, birthplace, bio, occupation, novel} = req.body
-            character.update(data).then( () => {
-                return res.status(200)
-                          .json({type: "success", statusCode: 200, message:"Update successful", character})
-            })
-        })
 
-        // :id doesn't match any record in the database -> 404 bitch where ?
-        .catch( error => { let response = errors.notFound(); return res.status(response.statusCode).json(response.responseBody)})
+            let type, message, data, statusCode
+
+            if (character.isIdenticalTo(req.body)) {
+
+                type        = "success"
+                message     = "Update successful"
+                statusCode  = 200
+                data        = {name, age, birthplace, bio, occupation, novel} = req.body
+
+                character.update(data)
+                    .then( () => res.status(statusCode).json({type, statusCode, message, character}))
+                    .catch( err => {let e = errors.handle(err); return res.status(e.statusCode).json(e.responseBody)})
+
+            } else {
+                type        = "error"
+                message     = "Please provide all the fields"
+                statusCode  = 400
+                return res.status(statusCode).json({type, statusCode, message})
+            }
+
+        })
+        .catch( err => res.send(err))
 })
-
 // PATCH /api/characters/:id
-router.patch('/characters/:id', (req, res) => {
+// router.patch('/characters/:id', (req, res) => {
 
-    Character.findById(req.params.id)
-        .then( character => {
+Character.findById(req.params.id)
+    .then( character => {
 
-            let data = {name, age, birthplace, bio, occupation, novel} = req.body
+        let data = {name, age, birthplace, bio, occupation, novel} = req.body
 
-            character.update(data)
-                .then( () => {
-                    return res.status(200).json({type: "success", statusCode: 200, message:"Update successful", character})
-                })
-                .catch( error => {
-                    let err =  error.handle(error)
-                    return res.status(err.statusCode).json(err.responseBody)
-                })
+        character.update(data)
+            .then( () => {
+                return res.status(200).json({type: "success", statusCode: 200, message:"Update successful", character})
+            })
+            .catch( error => {
+                let err =  error.handle(error)
+                return res.status(err.statusCode).json(err.responseBody)
+            })
+    })
 
-        })
-
-        // :id doesn't match any record in the database -> 404 bitch where ?
-        .catch( error => {
-            let response = errors.notFound()
-            return res.status(response.statusCode).json(response.responseBody)
-        })
+    // :id doesn't match any record in the database -> 404 bitch where ?
+    .catch( error => {
+        let response = errors.notFound()
+        return res.status(response.statusCode).json(response.responseBody)
+    })
 })
 
 module.exports = router
