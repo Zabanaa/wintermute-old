@@ -10,7 +10,8 @@ else {
     connection    = new Sequelize(config.dbname, config.dbuser, config.dbpassword, {
         host: config.dbhost,
         dialect: config.dbengine,
-        logging: false
+        logging: false,
+        define: { timestamps: false}
     })
 }
 
