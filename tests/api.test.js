@@ -3,115 +3,158 @@ const app       = require('../app')
 const Character = require('../app/models/character')
 const chai      = require('chai')
 const chaiHttp  = require('chai-http')
+const db        = require('../config')
 const assert    = chai.assert
 
 chai.use(chaiHttp)
 
-let request = chai.request(app)
+describe("Test /api/characters", () => {
 
-before( () => {
+    let request     = chai.request(app)
+    let character   = {name: "Case", novel: "Neuromancer"}
 
-    // Connect to test db
-    const db    =
+    beforeEach( done => {
 
-})
+        Character.sync({force: true})
+            .then( () => done() )
+            .catch( e => { console.log(e.message); done() })
+    })
 
-describe("Test GET /api/characters", () => {
+    describe(" TEST / ", () => {
 
-    it("returns an array of characters", (done) => {
+        it("should return a 204 if the collection is empty", done => {
 
-        // request.get('/api/characters')
-        //     .end( (err, res) => {
-        //        assert.isFalse(res.error)
-        //        assert.equal(res.statusCode, 200)
-        //        assert.isArray(res.body)
-        //        assert.isObject(res.body[0])
-        //        assert.property(res.body[0], 'name')
-        //        done()
-        //     })
-        done()
+            request.get('/api/characters')
+                .end( (err, res) => {
+                    assert.isFalse(res.error)
+                    assert.equal(res.statusCode, 204)
+                    assert.isObject(res.body)
+                    done()
+                })
+        })
+
+        it("should return a list of characters if the collection is not empty", done => {
+
+            Character.create(character)
+                .then( () => {
+                    request.get('/api/characters')
+                        .end( (err, res) => {
+                            assert.isFalse(res.error)
+                            assert.equal(res.statusCode, 200)
+                            assert.property(res.body, 'type')
+                            assert.equal(res.body.type, 'success')
+                            assert.property(res.body, 'count')
+                            assert.equal(res.body.count, 1)
+                            assert.isArray(res.body.characters)
+                            assert.property(res.body.characters[0], 'href')
+                            assert.include(res.body.characters[0].href, '/api/characters/1')
+                        })
+                    done()
+                })
+                .catch( e => { console.log(e); done() })
+        })
+
+    })
+
+
+    describe("TEST /api/characters/:id", done => {
+
+
+        it("should return the corresponding character based on the id", done => {
+
+            Character.create(character)
+                .then( c => {
+                    request.get('/api/characters/1')
+                        .end( (err, res) => {
+                            assert.isFalse(res.error)
+                            assert.equal(res.statusCode, 200)
+                            assert.isObject(res.body)
+                            assert.property(res.body, 'id')
+                            assert.equal(res.body.id, 1)
+                            done()
+                        })
+                })
+                .catch( e => { console.log(e.message); done() })
+
+        })
+
+        it("Returns a 404 when the requested character does not exist", done => {
+
+            request.get('/api/characters/4')
+                .end( (err, res) => {
+                    assert.equal(res.statusCode, 404)
+                    assert.isObject(res.body)
+                    assert.property(res.body, 'type')
+                    assert.equal(res.body.type, 'error')
+                    assert.property(res.body, 'message')
+                    assert.include(res.body.message, 'not found')
+                    done()
+                })
+        })
+    })
+
+    describe("Test POST /api/characters/", () => {
+
+        let molly = {
+            name: "Molly Millions",
+            novel: "Neuromancer"
+        }
+
+        it("successfully saves the resource to the DB", (done) => {
+
+            request.post('/api/characters')
+                   .send(molly)
+                   .end( (err, res) => {
+                       assert.isTrue(res.ok)
+                       assert.isFalse(res.error)
+                       assert.equal(res.statusCode, 201)
+                       assert.property(res.body, 'character')
+                       assert.equal(res.body.character.bio, "Unknown")
+                       assert.equal(res.body.character.age, "Unknown")
+                       assert.equal(res.body.character.occupation, "Unknown")
+                       assert.equal(res.body.character.birthPlace, "Unknown")
+                       assert.include(res.headers.location, `/api/characters/${res.body.character.id}`)
+                       done()
+                    })
+        })
+
+        it("Returns a 409 when passed an already existing character", (done) => {
+
+            Character.create(molly)
+                .then( molly => {
+
+                    request.post('/api/characters')
+                            .send(molly)
+                            .end( (err, res) => {
+                                assert.equal(res.statusCode, 409)
+                                assert.property(res.body, 'type')
+                                assert.equal(res.body.type, 'error')
+                                assert.equal(res.body.message, 'A resource with the following fields already exists in the database.')
+                                assert.isArray(res.body.fields)
+                                done()
+                            })
+                })
+                .catch(e => { console.log(e); done()})
+        })
+
+
+        it("Returns a 422 when missing one or more required fields", (done) => {
+
+            fakeCharacter = { bio: "Badass techno-samurai", occupation: "Mercernary" }
+
+            request.post('/api/characters')
+                    .send(fakeCharacter)
+                    .end( (err, res) => {
+                        assert.equal(res.statusCode, 422)
+                        assert.property(res.body, 'type')
+                        assert.equal(res.body.type, 'error')
+                        assert.equal(res.body.message, 'Missing required fields.')
+                        assert.isArray(res.body.fields)
+                        done()
+                    })
+        })
     })
 })
-
-// describe("Test GET /api/characters/:id", () => {
-
-//     let characterId = "58371bc3cff3432834ea4ecf"
-
-//     it("returns the corresponding character based on the id", (done) => {
-
-//         request.get(`/api/characters/${characterId}`)
-//             .end( (err, res) => {
-//                 assert.isFalse(res.error)
-//                 assert.equal(res.statusCode, 200)
-//                 assert.isObject(res.body)
-//                 assert.property(res.body, "_id")
-//                 assert.equal(res.body._id, characterId)
-//                 done()
-//             })
-//     })
-// })
-
-// describe("Test POST /api/characters/", () => {
-
-//     let character = {
-//         name: "Molly Millions",
-//         novel: "Neuromancer"
-//     }
-
-//     it("successfully saves the resource to the DB", (done) => {
-
-//         // Make sure the response returns a 201
-//         // Make sure That the non required fields return Unknown if not provided
-//         // Make sure That the location header is equal to /api/characters/id
-
-//         request.post('/api/characters')
-//                .send(character)
-//                .end( (err, res) => {
-//                    assert.isTrue(res.ok)
-//                    assert.isFalse(res.error)
-//                    assert.equal(res.statusCode, 201)
-//                    assert.equal(res.body.name, character.name)
-//                    assert.equal(res.body.bio, "Unknown")
-//                    assert.equal(res.body.age, "Unknown")
-//                    assert.equal(res.body.occupation, "Unknown")
-//                    assert.equal(res.body.birthPlace, "Unknown")
-//                    assert.include(res.headers.location, `/api/characters/${res.body._id}`)
-//                    done()
-//                 })
-//     })
-
-//     it("Returns a 409 when passed an already existing character", (done) => {
-
-//         request.post('/api/characters')
-//                 .send(character)
-//                 .end( (err, res) => {
-//                     assert.equal(res.statusCode, 409)
-//                     assert.equal(res.body.status, 409)
-//                     assert.equal(res.body.error, "A Character with this name already exists")
-//                     done()
-//                 })
-//     })
-
-//     it("Returns a 422 when missing one or more required fields", (done) => {
-
-//         character = {
-//             bio: "Badass techno-samurai",
-//             occupation: "Mercernary"
-//         }
-
-//         request.post('/api/characters')
-//                 .send(character)
-//                 .end( (err, res) => {
-//                     assert.equal(res.statusCode, 422)
-//                     assert.equal(res.body.status, 422)
-//                     assert.equal(res.body.error, "Missing required fields")
-//                     assert.property(res.body, "fields")
-//                     assert.isArray(res.body.fields)
-//                     assert.include(res.body.fields, "novel", "name")
-//                     done()
-//                 })
-//     })
-// })
 
 // describe("Test PUT /api/characters/id", () => {
 
