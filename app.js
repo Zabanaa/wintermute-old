@@ -5,7 +5,7 @@ const bodyParser        = require('body-parser')
 const mainEndpoints     = require('./app/routes')
 const apiEndpoints      = require('./app/routes/api')
 const port              = process.env.PORT || 3000
-const db                = require('./app/models')
+const db                = require('./config')
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}))

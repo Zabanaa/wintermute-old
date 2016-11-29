@@ -1,4 +1,4 @@
-const db                = require('./index')
+const db                = require('../../config')
 
 // Define the columns
 let name                = {type: db.Sequelize.STRING, allowNull: false, unique: true}

@@ -88,6 +88,7 @@ router.put('/characters/:id', (req, res) => {
         })
         .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
 })
+
 // PATCH /api/characters/:id
 router.patch('/characters/:id', (req, res) => {
 
