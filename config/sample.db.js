@@ -1,6 +1,6 @@
 let config
 
-if (process.env.environment === "testing") {
+if (process.env.NODE_ENV === "testing") {
 
     config    = {
         dbname: "dbname",
@@ -12,7 +12,7 @@ if (process.env.environment === "testing") {
 
 }
 
-else if (process.env.environment === "production") {
+else if (process.env.NODE_ENV === "production") {
 
     devConfig    = {
         dbname: "wintermute",
