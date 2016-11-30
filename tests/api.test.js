@@ -154,40 +154,70 @@ describe("Test /api/characters", () => {
                     })
         })
     })
+
+    describe("Test PUT /api/characters/id", () => {
+
+        it("returns a 400 when passing an incomplete payload", (done) => {
+
+            Character.create(character)
+                .then( c => {
+                    request.put(`/api/characters/${c.id}`)
+                       .send({name: "Fanfan la tulipe"})
+                       .end( (err, res) => {
+                           assert.equal(res.statusCode, 400)
+                           assert.equal(res.body.statusCode, 400)
+                           assert.property(res.body,'type')
+                           assert.equal(res.body.message, "Bad request. Please provide all the fields")
+                           done()
+                       })
+                })
+                .catch( e => { console.log(e); done() })
+        })
+
+        it("returns a 200 when passing a complete payload", (done) => {
+
+            Character.create(character)
+                .then( c => {
+                    request.put(`/api/characters/${c.id}`)
+                       .send({
+                           name: "Fanfan la tulipe", age: "23", bio: "The best ever", birthPlace: "Somewhere in the sprawl",
+                           occupation: "Niksamair", novel: "Fanfan la tulipe"
+                       })
+                       .end( (err, res) => {
+                           assert.equal(res.statusCode, 200)
+                           assert.equal(res.body.statusCode, 200)
+                           assert.property(res.body, "message")
+                           assert.equal(res.body.message, "Character successfully updated")
+                           done()
+                       })
+
+                })
+                .catch( e => { console.log(e); done() })
+
+        })
+    })
+
+    describe("Test PATCH /api/characters/:id", () => {
+
+        it("should return a 200 when successful", done => {
+
+            Character.create(character)
+                .then( c => {
+                    request.patch(`/api/characters/${c.id}`)
+                        .send({name: "Bennnnnz"})
+                        .end( (err, res) => {
+                            assert.equal(res.statusCode, 200)
+                            assert.equal(res.body.statusCode, 200)
+                            assert.property(res.body, "type")
+                            assert.equal(res.body.type, "success")
+                            assert.property(res.body, "message")
+                            assert.equal(res.body.message, "Update successful")
+                            done()
+                        })
+                })
+                .catch( e => { console.log(e); done() })
+        })
+
+    })
+
 })
-
-// describe("Test PUT /api/characters/id", () => {
-
-//     it("returns a 400 when passing an incomplete payload", (done) => {
-
-//         request.put(`/api/characters/58371bc3cff3432834ea4ecf`)
-//                .send({name: "Fanfan la tulipe"})
-//                .end( (err, res) => {
-//                    assert.equal(res.statusCode, 400)
-//                    assert.equal(res.body.status, 400)
-//                    assert.property(res.body, "error")
-//                    assert.equal(res.body.error, "Bad request. Please provide all the fields.")
-//                    done()
-//                })
-//     })
-
-//     it("returns a 200 when passing a complete payload", (done) => {
-
-//         request.put(`/api/characters/58371bc3cff3432834ea4ecf`)
-//                .send({
-//                    name: "Fanfan la tulipe",
-//                    age: "23",
-//                    bio: "The best ever",
-//                    birthPlace: "Somewhere in the sprawl",
-//                    occupation: "Niksamair",
-//                    novel: "Fanfan la tulipe"
-//                })
-//                .end( (err, res) => {
-//                    assert.equal(res.statusCode, 200)
-//                    assert.equal(res.body.status, 200)
-//                    assert.property(res.body, "message")
-//                    assert.equal(res.body.message, "Character successfully updated")
-//                    done()
-//                })
-//     })
-// })
