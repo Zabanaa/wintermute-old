@@ -228,6 +228,7 @@ describe("Test /api/characters", () => {
                     request.delete(`/api/characters/${c.id}`)
                         .end( (err, res) => {
                             assert.equal(res.statusCode, 204)
+                            done()
                         })
                 })
                 .catch( e => { console.log(e); done() })
