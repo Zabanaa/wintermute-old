@@ -124,4 +124,20 @@ router.delete('/characters/:id', (req, res) => {
         .catch( error => res.status(400).json({ type:"error", message:"Bad request" }))
 })
 
-module.exports = router
+// GET /api/novels
+router.get('/novels', (req, res) => {})
+
+// GET /api/novels/:id
+router.get('/novels/:id', (req, res) => {})
+
+// POST /api/novels
+router.post('/novels', (req, res) => {})
+
+// PUT /api/novels/:id
+router.put('/novels/:id', (req, res) => {})
+
+// PATCH /api/novels/:id
+router.patch('/novels/:id', (req, res) => {})
+
+// DELETE /api/novels/:id
+router.delete('/novels/:id', (req, res) => {})
