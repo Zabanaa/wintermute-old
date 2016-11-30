@@ -1,5 +1,4 @@
 const handle = (error) => {
-
     let statusCode, message, responseBody
     let type             = "error"
     let validationErrors = error.errors
@@ -25,6 +24,7 @@ const handle = (error) => {
 
     else {
 
+        console.log("ITYKUYKUHHH HJHL:KHIH: JHBK GKJHL ")
         statusCode          = 500
         message             = "An unexpected error occured. Please contact karim.cheurfi@gmail.com to report any issue encountered."
         responseBody        = {type, statusCode, message}

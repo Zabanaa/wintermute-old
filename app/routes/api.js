@@ -107,11 +107,21 @@ router.patch('/characters/:id', (req, res) => {
                     message     = "Update successful"
                     return res.status(200).json({type, statusCode, message, character})
                 })
-                .catch( error => { let e =  error.handle(error); return res.status(e.statusCode).json(e.responseBody) })
+                .catch( error => { let e =  errors.handle(error); return res.status(e.statusCode).json(e.responseBody) })
         })
 
         // :id doesn't match any record in the database -> 404 bitch where ?
         .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
+})
+
+router.delete('/characters/:id', (req, res) => {
+
+    Character.destroy({ where: {id: req.params.id} })
+        .then( () => {
+            console.log("delete")
+            return res.status(204).end()
+        })
+        .catch( error => res.status(400).json({ type:"error", message:"Bad request" }))
 })
 
 module.exports = router

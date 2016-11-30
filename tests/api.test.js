@@ -217,7 +217,20 @@ describe("Test /api/characters", () => {
                 })
                 .catch( e => { console.log(e); done() })
         })
-
     })
 
+    describe("Test DELETE /api/characters/:id", () => {
+
+        it("should return a 204 when successful", done => {
+
+            Character.create(character)
+                .then( c => {
+                    request.delete(`/api/characters/${c.id}`)
+                        .end( (err, res) => {
+                            assert.equal(res.statusCode, 204)
+                        })
+                })
+                .catch( e => { console.log(e); done() })
+        })
+    })
 })
