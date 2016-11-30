@@ -70,7 +70,7 @@ router.put('/characters/:id', (req, res) => {
             if (character.isIdenticalTo(req.body)) {
 
                 type        = "success"
-                message     = "Update successful"
+                message     = "Character successfully updated"
                 statusCode  = 200
                 data        = {name, age, birthplace, bio, occupation, novel} = req.body
 
@@ -80,7 +80,7 @@ router.put('/characters/:id', (req, res) => {
 
             } else {
                 type        = "error"
-                message     = "Please provide all the fields"
+                message     = "Bad request. Please provide all the fields"
                 statusCode  = 400
                 return res.status(statusCode).json({type, statusCode, message})
             }
