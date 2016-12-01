@@ -24,7 +24,6 @@ const handle = (error) => {
 
     else {
 
-        console.log("ITYKUYKUHHH HJHL:KHIH: JHBK GKJHL ")
         statusCode          = 500
         message             = "An unexpected error occured. Please contact karim.cheurfi@gmail.com to report any issue encountered."
         responseBody        = {type, statusCode, message}
