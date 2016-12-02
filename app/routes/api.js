@@ -14,7 +14,6 @@ router.get('/characters', (req, res) => {
         .then( characters => {
             let type, statusCode, message
             let count  = characters.length
-
             type       = "success"
 
             if (count === 0) {
@@ -73,7 +72,7 @@ router.put('/characters/:id', (req, res) => {
                 type        = "success"
                 message     = "Character successfully updated"
                 statusCode  = 200
-                data        = {name, age, birthplace, bio, occupation, novel} = req.body
+                data        = {name, age, birthplace, bio, occupation} = req.body
 
                 character.update(data)
                     .then( () => res.status(statusCode).json({type, statusCode, message, character}))
@@ -118,10 +117,7 @@ router.patch('/characters/:id', (req, res) => {
 router.delete('/characters/:id', (req, res) => {
 
     Character.destroy({ where: {id: req.params.id} })
-        .then( () => {
-            console.log("delete")
-            return res.status(204).end()
-        })
+        .then( () => { return res.status(204).end() })
         .catch( error => res.status(400).json({ type:"error", message:"Bad request" }))
 })
 
