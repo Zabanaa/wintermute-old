@@ -3,4 +3,8 @@ node_modules
 *.swo
 .sass-cache
 config/dbConfig.js
+config/config.json
+migrations
+seeders
+models
 
