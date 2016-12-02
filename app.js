@@ -19,8 +19,11 @@ app.use('/api', apiEndpoints)
 // app.listen takes also a config object containing the host and the port in case we want
 // to chage those
 
-db.connection.sync({force: true}).then( () => {
-    app.listen(port, () => console.log(`App started. Server listening on port ${port}`))
-})
+db.connection.authenticate()
+    .then( () => {
+        console.log("Connection established")
+        app.listen(port, () => console.log(`App started. Server listening on port ${port}`))
+    })
+    .catch( e => console.log(e))
 
 module.exports = app
