@@ -141,7 +141,6 @@ describe("Test /api/characters", () => {
                     done()
                 })
         })
-    })
 
     describe("Test PUT /api/characters/id", () => {
 
@@ -201,4 +200,5 @@ describe("Test /api/characters", () => {
                     done()
                 })
         })
+    })
 })
