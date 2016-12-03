@@ -45,13 +45,13 @@ router.post('/', (req, res) => {
     let data, type, statusCode, message, uri
     let protocol = req.protocol
     let host     = req.hostname
-    data = { name, year, nationality, plot } = req.body
+    data = { name, nationality } = req.body
 
     Author.create(data)
         .then( author => {
             type       = "success"
             statusCode = 201
-            message    = "Character was successfully created"
+            message    = "Author was successfully created"
             uri        = `/api/authors/${author.dataValues.id}`
             author.serialise(protocol, host, uri)
             return res.location(author.dataValues.href).status(statusCode).json({type, statusCode, message, author})
@@ -72,7 +72,7 @@ router.put('/:id', (req, res) => {
                 type        = "success"
                 message     = "Author successfully updated"
                 statusCode  = 200
-                data        = {name, year, nationality, plot } = req.body
+                data        = {name, nationality } = req.body
 
                 author.update(data)
                     .then( () => res.status(statusCode).json({type, statusCode, message, author}))
@@ -98,7 +98,7 @@ router.patch('/:id', (req, res) => {
 
         .then( author => {
 
-            data        = {name, year, nationality, plot } = req.body
+            data        = { name, nationality } = req.body
 
             author.update(data)
                 .then( () => {
