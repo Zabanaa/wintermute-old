@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 const app       = require('../app')
-const Novel     = require('../app/models/novel')
+const Novel     = require('../app/api/models/novel')
 const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const db        = require('../config')

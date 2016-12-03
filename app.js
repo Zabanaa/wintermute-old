@@ -2,18 +2,18 @@
 const express           = require('express')
 const app               = express()
 const bodyParser        = require('body-parser')
-const mainEndpoints     = require('./app/routes')
-const apiEndpoints      = require('./app/routes/api')
 const port              = process.env.PORT || 3000
 const db                = require('./config')
+const api               = require('./app/api/')
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 // Endpoints
-app.use(mainEndpoints)
-app.use('/api', apiEndpoints)
+app.use('/api/characters', api.characterEndpoints)
+app.use('/api/novels', api.novelEndpoints)
+app.use('/api/author', api.authorEndpoints)
 
 // Start app
 // app.listen takes also a config object containing the host and the port in case we want
@@ -21,7 +21,6 @@ app.use('/api', apiEndpoints)
 
 db.connection.authenticate()
     .then( () => {
-        console.log("Connection established")
         app.listen(port, () => console.log(`App started. Server listening on port ${port}`))
     })
     .catch( e => console.log(e))

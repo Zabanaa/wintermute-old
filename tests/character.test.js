@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize')
 const app       = require('../app')
-const Character = require('../app/models/character')
-const Novel     = require('../app/models/novel')
+const Character = require('../app/api/models/character')
 const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const db        = require('../config')
@@ -161,7 +160,7 @@ describe("Test /api/characters", () => {
             request.put(`/api/characters/1`)
                .send({
                    name: "Fanfan la tulipe", age: "23", bio: "The best ever", birthPlace: "Somewhere in the sprawl",
-                   occupation: "Niksamair", novelId: null
+                   occupation: "Niksamair", novelId: null, authorId: null
                })
                .end( (err, res) => {
                    assert.equal(res.statusCode, 200)

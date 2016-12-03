@@ -1,7 +1,7 @@
 const chai       = require('chai')
 const chaiHttp   = require('chai-http')
 const assert     = chai.assert
-const methods    = require('../app/models/methods')
+const methods    = require('../app/api/models/methods')
 
 let benz                = {}
 benz.dataValues         = {id: 2, name: "Karim Benzema", club: "Real Madrid CF", position:"CF"}
