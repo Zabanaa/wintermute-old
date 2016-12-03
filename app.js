@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 // Endpoints
 app.use('/api/characters', api.characterEndpoints)
 app.use('/api/novels', api.novelEndpoints)
-app.use('/api/author', api.authorEndpoints)
+app.use('/api/authors', api.authorEndpoints)
 
 // Start app
 // app.listen takes also a config object containing the host and the port in case we want
