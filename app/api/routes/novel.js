@@ -39,6 +39,27 @@ router.get('/:id', (req, res) => {
         .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
 })
 
+// GET /api/novels/:id/characters
+
+router.get('/:id/characters', (req, res) => {
+
+    let type, statusCode, message, count
+
+    Novel.findById(req.params.id)
+        .then( novel => {
+            novel.getCharacters()
+                .then( characters => {
+                    count     = characters.length
+                    if (count === 0) res.status(204).end()
+                    type        = "success"
+                    statusCode  = 200
+                    return res.status(statusCode).json({ type, statusCode, count, characters })
+                })
+                .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
+        })
+        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
+})
+
 // POST /api/novels
 router.post('/', (req, res) => {
 
