@@ -49,8 +49,8 @@ router.get('/:id/characters', (req, res) => {
         .then( novel => {
             novel.getCharacters()
                 .then( characters => {
-                    count     = characters.length
-                    if (count === 0) res.status(204).end()
+                    count       = characters.length
+                    if (count === 0) return res.status(204).end()
                     type        = "success"
                     statusCode  = 200
                     return res.status(statusCode).json({ type, statusCode, count, characters })
