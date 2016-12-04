@@ -122,8 +122,6 @@ describe("Test /api/characters", () => {
                     done()
                 })
             })
-        })
-
 
         it("Returns a 422 when missing one or more required fields", (done) => {
 
@@ -140,6 +138,8 @@ describe("Test /api/characters", () => {
                     done()
                 })
         })
+
+    })
 
     describe("Test PUT /api/characters/id", () => {
 

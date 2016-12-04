@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 const app       = require('../app')
-const Novel     = require('../app/api/models/novel')
+const Author    = require('../app/api/models/author')
 const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const db        = require('../config')
@@ -8,15 +8,15 @@ const assert    = chai.assert
 
 chai.use(chaiHttp)
 let request     = chai.request(app)
-let novel       = {name: "Neuromancer", year: "2014"}
+let author      = {name: "William Gibson"}
 
-describe("Test /api/novels", () => {
+describe("Test /api/authors", () => {
 
     beforeEach( done => {
 
        db.connection.sync({force: true})
             .then( () => {
-                Novel.create(novel)
+                Author.create(author)
                     .then( c => {return})
                     .catch( e => console.log(e.errors))
                     done()
@@ -24,35 +24,35 @@ describe("Test /api/novels", () => {
             .catch( e => { console.log(e.message); done() })
     })
 
-    describe("TEST GET /api/novels ", () => {
+    describe("TEST GET /api/authors ", () => {
 
-        it("returns a 204 when there are no novels", done => {
-            Novel.destroy({ where: {id: 1}})
-            request.get('/api/novels')
+        it("returns a 204 when there are no authors", done => {
+            Author.destroy({ where: {id: 1}})
+            request.get('/api/authors')
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 204)
                     done()
                 })
         })
 
-        it("returns a list of all available novels", () => {
+        it("returns a list of all available authors", () => {
 
-            request.get('/api/novels')
+            request.get('/api/authors')
                 .end((err, res) => {
                     assert.equal(res.statusCode, 200)
                     assert.isObject(res.body)
                     assert.property(res.body, "count")
-                    assert.property(res.body, "novels")
-                    assert.isArray(res.body.novels)
-                    assert.includes(res.body.novels[0].href, '/api/novels/1')
+                    assert.property(res.body, "authors")
+                    assert.isArray(res.body.authors)
+                    assert.includes(res.body.authors[0].href, '/api/authors/1')
                 })
         })
     })
 
-    describe("TEST GET /api/novels/:id", done => {
+    describe("TEST GET /api/authors/:id", done => {
 
-        it("should return the corresponding novels based on the id", done => {
-            request.get('/api/novels/1')
+        it("should return the corresponding author based on the id", done => {
+            request.get('/api/authors/1')
                 .end( (err, res) => {
                     assert.isFalse(res.error)
                     assert.equal(res.statusCode, 200)
@@ -63,9 +63,9 @@ describe("Test /api/novels", () => {
                 })
         })
 
-        it("Returns a 404 when the requested novel does not exist", done => {
+        it("Returns a 404 when the requested author does not exist", done => {
 
-            request.get('/api/novels/4')
+            request.get('/api/authors/4')
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 404)
                     assert.isObject(res.body)
@@ -78,53 +78,38 @@ describe("Test /api/novels", () => {
         })
     })
 
-    describe("Test POST /api/novels/", () => {
+    describe("Test POST /api/authors/", () => {
 
-        let countZero    = { name: "Count Zero", year: "2232" }
-        let idoru        = { name: "Idoru", year: "2323" }
+        let sterling  = { name: "Bruce Sterling" }
+        let asimov    = { name: "Isaac Asimov" }
 
         beforeEach( done => {
 
-            Novel.create(countZero)
+            Author.create(asimov)
                 .then( c => done())
                 .catch( e => { console.log("Shit happened, figure it out" + e); done() } )
         })
 
-        it("Returns a 422 when missing one or more required fields", (done) => {
-
-            fakeNovel = { author: "William Gibson", plot: "Cool story bro, you should check it out." }
-
-            request.post('/api/novels')
-                .send(fakeNovel)
-                .end( (err, res) => {
-                    assert.equal(res.statusCode, 422)
-                    assert.property(res.body, 'type')
-                    assert.equal(res.body.type, 'error')
-                    assert.equal(res.body.message, 'Missing required fields.')
-                    assert.isArray(res.body.fields)
-                    done()
-                })
-        })
-
         it("successfully saves the resource to the DB", (done) => {
 
-            request.post('/api/novels')
-               .send(idoru)
+
+            request.post('/api/authors')
+               .send(sterling)
                .end( (err, res) => {
                    assert.isTrue(res.ok)
                    assert.isFalse(res.error)
                    assert.equal(res.statusCode, 201)
-                   assert.property(res.body, 'novel')
-                   assert.equal(res.body.novel.plot, "Unknown")
-                   assert.include(res.headers.location, `/api/novels/${res.body.novel.id}`)
+                   assert.property(res.body, 'author')
+                   assert.equal(res.body.author.nationality, "Unknown")
+                   assert.include(res.headers.location, `/api/authors/${res.body.author.id}`)
                    done()
                 })
         })
 
-        it("Returns a 409 when passed an already existing novels", (done) => {
+        it("Returns a 409 when passed an already existing author", (done) => {
 
-            request.post('/api/novels')
-                .send(countZero)
+            request.post('/api/authors')
+                .send(asimov)
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 409)
                     assert.property(res.body, 'type')
@@ -135,13 +120,28 @@ describe("Test /api/novels", () => {
                 })
         })
 
+        it("Returns a 422 when missing one or more required fields", (done) => {
+
+            fakeAuthor = { nationality: "French" }
+
+            request.post('/api/authors')
+                .send(fakeAuthor)
+                .end( (err, res) => {
+                    assert.equal(res.statusCode, 422)
+                    assert.property(res.body, 'type')
+                    assert.equal(res.body.type, 'error')
+                    assert.equal(res.body.message, 'Missing required fields.')
+                    assert.isArray(res.body.fields)
+                    done()
+                })
+        })
     })
 
-    describe("Test PUT /api/novels/id", () => {
+    describe("Test PUT /api/authors/id", () => {
 
         it("returns a 400 when passing an incomplete payload", (done) => {
-           request.put(`/api/novels/1`)
-               .send({name: "Fanfan la tulipe"})
+           request.put(`/api/authors/1`)
+               .send({nationality: "CanadianFanfan la tulipe"})
                .end( (err, res) => {
                    assert.equal(res.statusCode, 400)
                    assert.equal(res.body.statusCode, 400)
@@ -153,23 +153,23 @@ describe("Test /api/novels", () => {
 
         it("returns a 200 when passing a complete payload", (done) => {
 
-            request.put(`/api/novels/1`)
-               .send({ name: "Fanfan la tulipe", year: "1223", author: "kjkjk", plot: "Somewhere in the sprawl", authorId: null })
+            request.put(`/api/authors/1`)
+               .send({ name: "Fanfan la tulipe", nationality: "Mexican" })
                .end( (err, res) => {
                    assert.equal(res.statusCode, 200)
                    assert.equal(res.body.statusCode, 200)
                    assert.property(res.body, "message")
-                   assert.equal(res.body.message, "Novel successfully updated")
+                   assert.equal(res.body.message, "Author successfully updated")
                    done()
                })
         })
     })
 
-    describe("Test PATCH /api/novels/:id", () => {
+    describe("Test PATCH /api/authors/:id", () => {
 
         it("should return a 200 when successful", done => {
 
-            request.patch(`/api/novels/1`)
+            request.patch(`/api/authors/1`)
                 .send({name: "Bennnnnz"})
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 200)
@@ -183,10 +183,10 @@ describe("Test /api/novels", () => {
             })
     })
 
-    describe("Test DELETE /api/novels/:id", () => {
+    describe("Test DELETE /api/authors/:id", () => {
 
         it("should return a 204 when successful", done => {
-                request.delete(`/api/novels/1`)
+                request.delete(`/api/authors/1`)
                     .end( (err, res) => {
                     assert.equal(res.statusCode, 204)
                     done()
