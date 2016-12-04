@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 const app       = require('../app')
 const Novel     = require('../app/api/models/novel')
+const Character = require('../app/api/models/character')
 const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const db        = require('../config')
@@ -16,9 +17,15 @@ describe("Test /api/novels", () => {
 
        db.connection.sync({force: true})
             .then( () => {
+
                 Novel.create(novel)
-                    .then( c => {return})
+                    .then( c => { return })
                     .catch( e => console.log(e.errors))
+
+                Character.create({name: "Case", novelId: 1})
+                    .then( () => { return })
+                    .catch( e => console.log(e.message))
+
                     done()
             })
             .catch( e => { console.log(e.message); done() })
@@ -44,8 +51,37 @@ describe("Test /api/novels", () => {
                     assert.property(res.body, "count")
                     assert.property(res.body, "novels")
                     assert.isArray(res.body.novels)
-                    assert.includes(res.body.novels[0].href, '/api/novels/1')
+                    assert.include(res.body.novels[0].href, '/api/novels/1')
                 })
+        })
+    })
+
+    describe("TEST GET /api/novels/:id/characters ", () => {
+
+        it("returns a 204 when there are no characters associated to the novel", done => {
+
+            Character.destroy({where: {id: 1}})
+                .then( () => {
+                    request.get('/api/novels/1/characters')
+                        .end( (err, res) => {
+                            assert.equal(res.statusCode, 204)
+                            done()
+                        })
+                })
+                .catch( e => console.log(e))
+        })
+
+        it("returns a list of characters associated to the novel", () => {
+
+            request.get('/api/novels/1/characters')
+                .end((err, res) => {
+                    assert.equal(res.statusCode, 200)
+                    assert.isObject(res.body)
+                    assert.property(res.body, "count")
+                    assert.property(res.body, "characters")
+                    assert.isArray(res.body.characters)
+                })
+
         })
     })
 
