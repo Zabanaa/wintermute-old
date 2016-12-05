@@ -22,6 +22,7 @@ router.get('/', (req, res) => {
             } else {
                 statusCode  = 200
                 authors.map( a => a.serialise(protocol, host, `/api/authors/${a.dataValues.id}`) )
+                authors.map( a => a.dataValues.novels = `${protocol}://${host}/api/authors/${a.dataValues.id}/novels`)
                 return res.status(statusCode).json({type, statusCode, count, authors})
             }
 
@@ -32,9 +33,13 @@ router.get('/', (req, res) => {
 // GET /api/authors/:id
 router.get('/:id', (req, res) => {
 
+    let protocol = req.protocol
+    let hostname = req.hostname
+
     Author.findById(req.params.id)
         .then( author => {
             if (author === null) { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) }
+            author.dataValues.novels = `${protocol}://${hostname}/api/authors/${author.dataValues.id}/novels`
             return res.status(200).json(author)
         })
         .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
@@ -65,10 +70,11 @@ router.post('/', (req, res) => {
 
     Author.create(data)
         .then( author => {
-            type       = "success"
-            statusCode = 201
-            message    = "Author was successfully created"
-            uri        = `/api/authors/${author.dataValues.id}`
+            type                         = "success"
+            statusCode                   = 201
+            message                      = "Author was successfully created"
+            uri                          = `/api/authors/${author.dataValues.id}`
+            author.dataValues.novels     = `${protocol}://${host}${uri}/novels`
             author.serialise(protocol, host, uri)
             return res.location(author.dataValues.href).status(statusCode).json({type, statusCode, message, author})
         })
