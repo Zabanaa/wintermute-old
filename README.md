@@ -14,16 +14,16 @@ but let's be honest, they're quite boring.
 
 Here's a quick list of wintermute's features:
 
-    - Support for GET, POST, PUT, PATCH and DELETE requests
-    - Built with the best practices of REST in mind
-    - Simple, clean and easy to understand API
-    - Support for HasMany relationships
-    - Uses PostgreSQL for the database
-    - No need to register
-    - Support for nested resources
-    - Compatible with the most popular JS frameworks
-    - Secured with SSL
-    - Graceful error handling
+- Support for GET, POST, PUT, PATCH and DELETE requests
+- Built with the best practices of REST in mind
+- Simple, clean and easy to understand API
+- Support for HasMany relationships
+- Uses PostgreSQL for the database
+- No need to register
+- Support for nested resources
+- Compatible with the most popular JS frameworks
+- Secured with SSL
+- Graceful error handling
 
 # The How
 
