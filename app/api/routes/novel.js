@@ -5,8 +5,8 @@ const Novel         = require('../models/novel')
 
 // GET /api/novels
 router.get('/', (req, res) => {
-    let protocol        = req.protocol
-    let host            = req.hostname
+
+    let {protocol, hostname} = req
 
     Novel.findAll()
         .then( novels => {
@@ -20,7 +20,9 @@ router.get('/', (req, res) => {
                 return res.status(statusCode).end()
             } else {
                 statusCode  = 200
-                novels.map( n => n.serialise(protocol, host, `/api/novels/${n.dataValues.id}`) )
+                novels.map( n => n.serialise(protocol, hostname, `/api/novels/${n.dataValues.id}`) )
+                novels.map( n => n.dataValues.characters =
+                    `${protocol}://${hostname}/api/novels${n.dataValues.id}/characters`)
                 return res.status(statusCode).json({type, statusCode, count, novels})
             }
 
@@ -31,9 +33,13 @@ router.get('/', (req, res) => {
 // GET /api/novels/:id
 router.get('/:id', (req, res) => {
 
+    let {protocol, hostname} = req
+
     Novel.findById(req.params.id)
+
         .then( novel => {
             if (novel === null) { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) }
+            novel.dataValues.characters = `${protocol}://${hostname}/api/novels/${novel.dataValues.id}/characters`
             return res.status(200).json(novel)
         })
         .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
@@ -64,17 +70,17 @@ router.get('/:id/characters', (req, res) => {
 router.post('/', (req, res) => {
 
     let data, type, statusCode, message, uri
-    let protocol = req.protocol
-    let host     = req.hostname
+    let {protocol, hostname} = req
     data = { name, year, plot, author } = req.body
 
     Novel.create(data)
         .then( novel => {
-            type       = "success"
-            statusCode = 201
-            message    = "Novel was successfully added"
-            uri        = `/api/novels/${novel.dataValues.id}`
-            novel.serialise(protocol, host, uri)
+            type                        = "success"
+            statusCode                  = 201
+            message                     = "Novel was successfully added"
+            uri                         = `/api/novels/${novel.dataValues.id}`
+            novel.dataValues.characters = `${protocol}://${hostname}${uri}/characters`
+            novel.serialise(protocol, hostname, uri)
             return res.location(novel.dataValues.href).status(statusCode).json({type, statusCode, message, novel})
         })
         .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
