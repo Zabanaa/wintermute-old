@@ -13,6 +13,7 @@ but let's be honest, they're quite boring.
 # The What
 
 Here's a quick list of wintermute's features:
+
     - Support for GET, POST, PUT, PATCH and DELETE requests
     - Built with the best practices of REST in mind
     - Simple, clean and easy to understand API
@@ -43,7 +44,7 @@ Here's a quick list of wintermute's features:
 
 - Show how to get a nested resource
 
-# The things to know about Contributing
+# The things to know about contributing
 
 I will be more than happy to accept contributions to this project, especially if you can
 teach me a trick of two about API design and security.
@@ -58,4 +59,18 @@ security etc)
 - [ ] Implement rate limiting
 - [ ] Implement pagination
 - [ ] Add support for OPTIONS requests
+- [ ] Create better (cleaner) tests
+- [ ] Extract (when possible) controller logic to their own functions (to help with unit
+  tests)
+
+# The things I learned
+
+- Express JS
+- The Sequelize ORM
+- How to create roles and manage a postgres installation
+- How to dynamically set environment variables using the infamous `package.json` file
+- How to merge and clone objects using `Object.assign`
+- ES6 Destructuring of objects
+- Compare equality of arrays
+
 
