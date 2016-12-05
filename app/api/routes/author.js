@@ -2,6 +2,7 @@ const express       = require('express')
 const router        = express.Router()
 const errors        = require('./errors')
 const Author        = require('../models/author')
+const Novel         = require('../models/novel')
 
 // GET /api/authors
 router.get('/', (req, res) => {
@@ -35,6 +36,21 @@ router.get('/:id', (req, res) => {
         .then( author => {
             if (author === null) { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) }
             return res.status(200).json(author)
+        })
+        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
+})
+
+// GET /api/authors/:id/novels
+router.get('/:id/novels', (req, res) => {
+
+    Novel.findAll({ where: {authorId: req.params.id}})
+        .then( novels => {
+            let type, statusCode
+            let count = novels.length
+            if (count === 0) return res.status(204).end()
+            type         = "success"
+            statusCode   = 200
+            return res.status(statusCode).json({type, statusCode, count, novels})
         })
         .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
 })

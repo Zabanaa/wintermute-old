@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 const app       = require('../app')
 const Author    = require('../app/api/models/author')
+const Novel     = require('../app/api/models/novel')
 const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const db        = require('../config')
@@ -19,7 +20,12 @@ describe("Test /api/authors", () => {
                 Author.create(author)
                     .then( c => {return})
                     .catch( e => console.log(e.errors))
-                    done()
+
+                Novel.create({name: "Neuromancer", year: "2323", authorId: 1})
+                    .then( n => {return})
+                    .catch( e => console.log(e.errors))
+
+                done()
             })
             .catch( e => { console.log(e.message); done() })
     })
@@ -77,6 +83,35 @@ describe("Test /api/authors", () => {
                 })
         })
     })
+
+    describe("TEST GET /api/authors/:id/novels ", () => {
+
+        it("returns a 204 when there are no novels associated to the author", done => {
+
+            Novel.destroy({ where: {id: 1}})
+                .then( () => {
+                    request.get('/api/authors/1/novels')
+                        .end( (err, res) => {
+                            assert.equal(res.statusCode, 204)
+                            done()
+                        })
+                })
+                .catch(e => console.log(e))
+        })
+
+        it("returns a list of characters associated to the novel", () => {
+
+            request.get('/api/authors/1/characters')
+                .end((err, res) => {
+                    assert.equal(res.statusCode, 200)
+                    assert.isObject(res.body)
+                    assert.property(res.body, "count")
+                    assert.property(res.body, "novels")
+                    assert.isArray(res.body.novels)
+                })
+        })
+    })
+
 
     describe("Test POST /api/authors/", () => {
 
