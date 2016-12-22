@@ -45,7 +45,6 @@ router.get('/:id/novels', (req, res) => {
         .then( novels => {
             let type, statusCode
             let count = novels.length
-            if (count === 0) return res.status(204).end()
             type         = "success"
             statusCode   = 200
             return res.status(statusCode).json({type, statusCode, count, novels})

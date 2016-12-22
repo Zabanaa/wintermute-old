@@ -32,7 +32,7 @@ describe("Test /api/authors", () => {
 
     describe("TEST GET /api/authors ", () => {
 
-        it("returns a 204 when there are no authors", done => {
+        it("returns an empty array when there are no authors", done => {
             Author.destroy({ where: {id: 1}})
             request.get('/api/authors')
                 .end( (err, res) => {
@@ -88,13 +88,15 @@ describe("Test /api/authors", () => {
 
     describe("TEST GET /api/authors/:id/novels ", () => {
 
-        it("returns a 204 when there are no novels associated to the author", done => {
+        it("returns an empty array when there are no novels associated to the author", done => {
 
             Novel.destroy({ where: {id: 1}})
                 .then( () => {
                     request.get('/api/authors/1/novels')
                         .end( (err, res) => {
-                            assert.equal(res.statusCode, 204)
+                            assert.equal(res.statusCode, 200)
+                            assert.isArray(res.body.novels)
+                            assert.equal(res.body.novels.length, 0)
                             done()
                         })
                 })

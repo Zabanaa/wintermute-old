@@ -60,13 +60,15 @@ describe("Test /api/novels", () => {
 
     describe("TEST GET /api/novels/:id/characters ", () => {
 
-        it("returns a 204 when there are no characters associated to the novel", done => {
+        it("returns an empty array when there are no characters associated to the novel", done => {
 
             Character.destroy({where: {id: 1}})
                 .then( () => {
                     request.get('/api/novels/1/characters')
                         .end( (err, res) => {
-                            assert.equal(res.statusCode, 204)
+                            assert.equal(res.statusCode, 200)
+                            assert.isArray(res.body.characters)
+                            assert.equal(res.body.characters, 0)
                             done()
                         })
                 })
