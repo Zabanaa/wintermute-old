@@ -83,7 +83,7 @@ router.post('/', (req, res) => {
             novel.serialise(protocol, hostname, uri)
             return res.location(novel.dataValues.href).status(statusCode).json({type, statusCode, message, novel})
         })
-        .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
+        .catch( error => { console.log(error); let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
 })
 
 // PUT /api/novels/:id

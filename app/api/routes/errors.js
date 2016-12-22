@@ -21,6 +21,12 @@ const handle = (error) => {
         return {statusCode, responseBody}
 
     }
+    else if (validationErrors[0].path === "year") {
+        statusCode          = 422
+        message             = "Please enter a valid year. (ex: YYYY)"
+        responseBody        = {type, statusCode, message}
+        return {statusCode, responseBody}
+    }
 
     else {
 

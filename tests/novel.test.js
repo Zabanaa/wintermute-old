@@ -20,15 +20,17 @@ describe("Test /api/novels", () => {
 
                 Novel.create(novel)
                     .then( c => { return })
-                    .catch( e => console.log(e.errors))
+                    // .catch( e => console.log(e.errors))
+                    .catch( e => console.log("Something Happened"))
 
                 Character.create({name: "Case", novelId: 1})
                     .then( () => { return })
-                    .catch( e => console.log(e.message))
+                    // .catch( e => console.log(e.message))
+                    .catch( e => console.log("Something happened"))
 
                     done()
             })
-            .catch( e => { console.log(e.message); done() })
+            .catch( e => { done() })
     })
 
     describe("TEST GET /api/novels ", () => {
@@ -68,7 +70,7 @@ describe("Test /api/novels", () => {
                             done()
                         })
                 })
-                .catch( e => console.log(e))
+                .catch( e => done() )
         })
 
         it("returns a list of characters associated to the novel", () => {
@@ -123,7 +125,7 @@ describe("Test /api/novels", () => {
 
             Novel.create(countZero)
                 .then( c => done())
-                .catch( e => { console.log("Shit happened, figure it out" + e); done() } )
+                .catch( e => { console.log("Shit happened, figure it out"); done() } )
         })
 
         it("Returns a 422 when missing one or more required fields", (done) => {
