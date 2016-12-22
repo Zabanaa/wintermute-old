@@ -15,10 +15,18 @@ app.use( (req, res, next) => {
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
+// Views
+app.set('views', './views')
+app.set('view engine', 'pug')
+
 // Endpoints
 app.use('/api/characters', api.characterEndpoints)
 app.use('/api/novels', api.novelEndpoints)
 app.use('/api/authors', api.authorEndpoints)
+
+app.get('/', (req, res) => {
+    return res.render('index', {title: "hello"})
+})
 
 // Start app
 // app.listen takes also a config object containing the host and the port in case we want
