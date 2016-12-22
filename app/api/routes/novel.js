@@ -14,17 +14,11 @@ router.get('/', (req, res) => {
             let count  = novels.length
 
             type       = "success"
-
-            if (count === 0) {
-                statusCode = 204
-                return res.status(statusCode).end()
-            } else {
-                statusCode  = 200
-                novels.map( n => n.serialise(protocol, hostname, `/api/novels/${n.dataValues.id}`) )
-                novels.map( n => n.dataValues.characters =
-                    `${protocol}://${hostname}/api/novels${n.dataValues.id}/characters`)
-                return res.status(statusCode).json({type, statusCode, count, novels})
-            }
+            statusCode  = 200
+            novels.map( n => n.serialise(protocol, hostname, `/api/novels/${n.dataValues.id}`) )
+            novels.map( n => n.dataValues.characters =
+                `${protocol}://${hostname}/api/novels${n.dataValues.id}/characters`)
+            return res.status(statusCode).json({type, statusCode, count, novels})
 
         })
         .catch( error => {let e = errors.handle(error); return res.status(e.statusCode).json(e.responseBody)})
@@ -83,7 +77,7 @@ router.post('/', (req, res) => {
             novel.serialise(protocol, hostname, uri)
             return res.location(novel.dataValues.href).status(statusCode).json({type, statusCode, message, novel})
         })
-        .catch( error => { console.log(error); let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
+        .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
 })
 
 // PUT /api/novels/:id

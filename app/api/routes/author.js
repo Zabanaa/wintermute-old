@@ -15,17 +15,10 @@ router.get('/', (req, res) => {
             let type, statusCode, message
             let count  = authors.length
             type       = "success"
-
-            if (count === 0) {
-                statusCode = 204
-                return res.status(statusCode).end()
-            } else {
-                statusCode  = 200
-                authors.map( a => a.serialise(protocol, host, `/api/authors/${a.dataValues.id}`) )
-                authors.map( a => a.dataValues.novels = `${protocol}://${host}/api/authors/${a.dataValues.id}/novels`)
-                return res.status(statusCode).json({type, statusCode, count, authors})
-            }
-
+            statusCode  = 200
+            authors.map( a => a.serialise(protocol, host, `/api/authors/${a.dataValues.id}`) )
+            authors.map( a => a.dataValues.novels = `${protocol}://${host}/api/authors/${a.dataValues.id}/novels`)
+            return res.status(statusCode).json({type, statusCode, count, authors})
         })
         .catch( error => {let e = errors.handle(error); return res.status(e.statusCode).json(e.responseBody)})
 })

@@ -36,7 +36,9 @@ describe("Test /api/authors", () => {
             Author.destroy({ where: {id: 1}})
             request.get('/api/authors')
                 .end( (err, res) => {
-                    assert.equal(res.statusCode, 204)
+                    assert.equal(res.statusCode, 200)
+                    assert.isArray(res.body.authors)
+                    assert.equal(res.body.authors.length, 0)
                     done()
                 })
         })

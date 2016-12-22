@@ -20,12 +20,10 @@ describe("Test /api/novels", () => {
 
                 Novel.create(novel)
                     .then( c => { return })
-                    // .catch( e => console.log(e.errors))
                     .catch( e => console.log("Something Happened"))
 
                 Character.create({name: "Case", novelId: 1})
                     .then( () => { return })
-                    // .catch( e => console.log(e.message))
                     .catch( e => console.log("Something happened"))
 
                     done()
@@ -35,11 +33,13 @@ describe("Test /api/novels", () => {
 
     describe("TEST GET /api/novels ", () => {
 
-        it("returns a 204 when there are no novels", done => {
+        it("returns an empty array when there are no novels", done => {
             Novel.destroy({ where: {id: 1}})
             request.get('/api/novels')
                 .end( (err, res) => {
-                    assert.equal(res.statusCode, 204)
+                    assert.equal(res.statusCode, 200)
+                    assert.isArray(res.body.novels)
+                    assert.equal(res.body.novels.length, 0)
                     done()
                 })
         })

@@ -30,7 +30,9 @@ describe("Test /api/characters", () => {
             Character.destroy({ where: {id: 1}})
             request.get('/api/characters')
                 .end( (err, res) => {
-                    assert.equal(res.statusCode, 204)
+                    assert.equal(res.statusCode, 200)
+                    assert.isArray(res.body.characters)
+                    assert.equal(res.body.characters.length, 0)
                     done()
                 })
         })

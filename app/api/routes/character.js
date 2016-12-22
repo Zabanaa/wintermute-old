@@ -14,15 +14,9 @@ router.get('/', (req, res) => {
             let type, statusCode, message
             let count  = characters.length
             type       = "success"
-
-            if (count === 0) {
-                statusCode = 204
-                return res.status(statusCode).end()
-            } else {
-                statusCode  = 200
-                characters.map( c => c.serialise(protocol, host, `/api/characters/${c.dataValues.id}`) )
-                return res.status(statusCode).json({type, statusCode, count, characters})
-            }
+            statusCode  = 200
+            characters.map( c => c.serialise(protocol, host, `/api/characters/${c.dataValues.id}`) )
+            return res.status(statusCode).json({type, statusCode, count, characters})
 
         })
         .catch( error => {let e = errors.handle(error); return res.status(e.statusCode).json(e.responseBody)})
