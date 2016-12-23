@@ -1,5 +1,12 @@
 html
-    head
-        title Wintermute - RESTful JSON API
+    include ./includes/head.pug
+
     body
-        h1 Bruv wagwaan
+
+        include ./sections/header
+        include ./sections/about
+        include ./sections/endpoints
+        include ./sections/examples
+        include ./sections/footer
+
+        script(src="/public/js/app.js")
