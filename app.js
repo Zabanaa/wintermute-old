@@ -18,6 +18,7 @@ app.use(bodyParser.json())
 // Views
 app.set('views', './views')
 app.set('view engine', 'pug')
+app.use('/public', express.static('public'))
 
 // Endpoints
 app.use('/api/characters', api.characterEndpoints)
