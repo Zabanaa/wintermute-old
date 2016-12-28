@@ -2,6 +2,7 @@ node_modules
 *.swp
 *.swo
 .sass-cache
+public
 config/dbConfig.js
 config/config.json
 migrations
