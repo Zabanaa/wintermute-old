@@ -55,9 +55,9 @@ security etc)
 
 # The things that remain to be done
 
-- [ ] Implement CORS
 - [ ] Implement rate limiting
 - [ ] Implement pagination
+- [ ] Implement caching
 - [ ] Add support for OPTIONS requests
 - [ ] Create better (cleaner) tests
 - [ ] Extract (when possible) controller logic to their own functions (to help with unit
