@@ -4,9 +4,12 @@ html
     body
 
         include ./sections/header
-        include ./sections/about
-        include ./sections/endpoints
-        include ./sections/examples
+
+        main
+            include ./sections/about
+            include ./sections/endpoints
+            include ./sections/examples
+
         include ./sections/footer
 
         script(src="/public/js/app.js")

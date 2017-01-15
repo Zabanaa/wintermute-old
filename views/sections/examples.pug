@@ -1,75 +1,77 @@
-h2.examples__heading Examples
+section.examples
 
-article.examples__example
+    h2.examples__heading Examples
 
-    h3 GET /api/novels/id
+    article.examples__example
 
-    pre
-        | fetch('https://wintermute.design/api/novels/1', {
-        |   method: 'GET'
-        | })
-        | .then( response => // do something with the response )
-        | .catch( error  =>  // do somethong with the error )
+        h3 GET /api/novels/id
 
-article.examples__example
+        pre
+            | fetch('https://wintermute.design/api/novels/1', {
+            |   method: 'GET'
+            | })
+            | .then( response => // do something with the response )
+            | .catch( error  =>  // do somethong with the error )
 
-    h3 POST /api/novels
+    article.examples__example
 
-    pre
-        | fetch('https://wintermute.design/api/novels', {
-        |   method: 'POST',
-        |   body: JSON.stringify({
-        |       name: "Idoru",
-        |       year: 1996,
-        |       authorId: 1 // William Gibson
-        |   })
-        | })
-        | .then( response => // do something with the response )
-        | .catch( error  =>  // do somethong with the error )
+        h3 POST /api/novels
 
-article.examples__example
+        pre
+            | fetch('https://wintermute.design/api/novels', {
+            |   method: 'POST',
+            |   body: JSON.stringify({
+            |       name: "Idoru",
+            |       year: 1996,
+            |       authorId: 1 // William Gibson
+            |   })
+            | })
+            | .then( response => // do something with the response )
+            | .catch( error  =>  // do somethong with the error )
 
-    h3 PUT /api/novels/id
+    article.examples__example
 
-    p
-       |  Please note that if you only wish to partially update a resource, you should do so
-       |  through a PATCH request. PUT requests should be used when you want to update an
-       |  entire resource.
+        h3 PUT /api/novels/id
 
-    pre
-        | fetch('https://wintermute.design/api/novels/1', {
-        |   method: 'PUT',
-        |   body: JSON.stringify({
-        |       name: "Neuromancer",
-        |       year: 1982,
-        |       authorId: 1 // William Gibson
-        |   })
-        | })
-        | .then( response => // do something with the response )
-        | .catch( error  =>  // do somethong with the error )
+        p
+           |  Please note that if you only wish to partially update a resource, you should do so
+           |  through a PATCH request. PUT requests should be used when you want to update an
+           |  entire resource.
 
-article.examples__example
+        pre
+            | fetch('https://wintermute.design/api/novels/1', {
+            |   method: 'PUT',
+            |   body: JSON.stringify({
+            |       name: "Neuromancer",
+            |       year: 1982,
+            |       authorId: 1 // William Gibson
+            |   })
+            | })
+            | .then( response => // do something with the response )
+            | .catch( error  =>  // do somethong with the error )
 
-    h3 PATCH /api/novels/id
+    article.examples__example
 
-    p At the time of writing, the fetch api does not support PATCH requests, so this example will use jQuery.ajax
+        h3 PATCH /api/novels/id
 
-    pre
-        | $.ajax('https://wintermute.design/api/novels/1', {
-        |   method: 'PATCH',
-        |   body: {
-        |       year: 1984
-        |   }
-        | })
-        | .then( response => // do something with the response )
+        p At the time of writing, the fetch api does not support PATCH requests, so this example will use jQuery.ajax
 
-article.examples__example
+        pre
+            | $.ajax('https://wintermute.design/api/novels/1', {
+            |   method: 'PATCH',
+            |   body: {
+            |       year: 1984
+            |   }
+            | })
+            | .then( response => // do something with the response )
 
-    h3 DELETE /api/novels/id
+    article.examples__example
 
-    pre
-        | fetch('https://wintermute.design/api/novels/1', {
-        |   method: 'DELETE',
-        | })
-        | .then( response => // do something with the response )
-        | .catch( error  =>  // do somethong with the error )
+        h3 DELETE /api/novels/id
+
+        pre
+            | fetch('https://wintermute.design/api/novels/1', {
+            |   method: 'DELETE',
+            | })
+            | .then( response => // do something with the response )
+            | .catch( error  =>  // do somethong with the error )
