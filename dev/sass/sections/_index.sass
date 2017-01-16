@@ -4,12 +4,19 @@
 @import "examples"
 @import "footer"
 
-main, header
+main, header, footer
     max-width: 62em
     margin: 0 auto
 
+    +mobile
+        max-width: 100%
+        padding: 0 1em
+
 section
     margin-bottom: 2em
+
+    +mobile
+        margin-bottom: 1em
 
     &:last-child
         margin-bottom: 0
@@ -18,3 +25,5 @@ section h2
     margin-bottom: 1.2em
     color: white
 
+    +mobile
+        margin-bottom: .6em

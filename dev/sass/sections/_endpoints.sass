@@ -7,6 +7,9 @@ section.endpoints
     margin-bottom: .7em
     color: white
 
+    +mobile
+        margin-bottom: .5em
+
     &:before
         content: "* "
         color: $lightblue
@@ -27,3 +30,6 @@ section.endpoints
 .endpoints .wrapper
     display: flex
     justify-content: space-between
+
+    +mobile
+        flex-direction: column
