@@ -4,7 +4,7 @@ section.examples
 
     article.examples__example
 
-        h3 GET /api/novels/id
+        h3 <span>GET</span> /api/novels/id
 
         pre
             | fetch('https://wintermute.design/api/novels/1', {
@@ -15,7 +15,7 @@ section.examples
 
     article.examples__example
 
-        h3 POST /api/novels
+        h3 <span>POST</span> /api/novels
 
         pre
             | fetch('https://wintermute.design/api/novels', {
@@ -31,12 +31,11 @@ section.examples
 
     article.examples__example
 
-        h3 PUT /api/novels/id
+        h3 <span>PUT</span> /api/novels/id
 
         p
-           |  Please note that if you only wish to partially update a resource, you should do so
-           |  through a PATCH request. PUT requests should be used when you want to update an
-           |  entire resource.
+           |  // Please note that if you only wish to partially update a resource, you should do so
+           |  through a PATCH request. PUT requests should be used when you want to update an entire resource.
 
         pre
             | fetch('https://wintermute.design/api/novels/1', {
@@ -52,9 +51,9 @@ section.examples
 
     article.examples__example
 
-        h3 PATCH /api/novels/id
+        h3 <span>PATCH</span> /api/novels/id
 
-        p At the time of writing, the fetch api does not support PATCH requests, so this example will use jQuery.ajax
+        p // At the time of writing, the fetch api does not support PATCH requests, so this example will use jQuery.ajax
 
         pre
             | $.ajax('https://wintermute.design/api/novels/1', {
@@ -67,7 +66,7 @@ section.examples
 
     article.examples__example
 
-        h3 DELETE /api/novels/id
+        h3 <span>DELETE</span> /api/novels/id
 
         pre
             | fetch('https://wintermute.design/api/novels/1', {

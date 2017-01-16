@@ -4,12 +4,17 @@
 @import "examples"
 @import "footer"
 
-section h2
-    margin-bottom: 1.2em
-
-main
+main, header
     max-width: 62em
     margin: 0 auto
 
 section
     margin-bottom: 2em
+
+    &:last-child
+        margin-bottom: 0
+
+section h2
+    margin-bottom: 1.2em
+    color: white
+
