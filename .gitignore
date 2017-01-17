@@ -7,5 +7,3 @@ config/dbConfig.js
 config/config.json
 migrations
 seeders
-models
-
