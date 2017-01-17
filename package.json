@@ -1,0 +1,46 @@
+{
+  "name": "wintermute",
+  "version": "1.0.0",
+  "description": "Dummy RESTful JSON API for those who need to fake data to play around with",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zabanaa/wintermute.git"
+  },
+  "keywords": [
+    "json",
+    "api",
+    "restful",
+    "http",
+    "expressjs"
+  ],
+  "author": "Karim Cheurfi (Zabana)",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/Zabanaa/wintermute/issues"
+  },
+  "homepage": "https://github.com/Zabanaa/wintermute#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.8",
+    "pg": "^6.1.0",
+    "pg-hstore": "^2.3.2",
+    "pug": "^2.0.0-beta6",
+    "sequelize": "^3.27.0",
+    "sequelize-cli": "^2.4.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.5",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.0.0",
+    "gulp-uglify": "^2.0.0",
+    "mocha": "^3.1.2",
+    "node-sass": "^4.1.1"
+  }
+}

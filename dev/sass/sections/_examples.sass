@@ -1,0 +1,69 @@
+.examples article
+
+    margin-bottom: 3em
+    background: $darkblue
+    color: $beige
+    font-size: .9em
+
+    +mobile
+        margin-bottom: 1.5em
+
+    &:last-child
+        margin-bottom: 0
+
+.examples h3
+    background: $lightgrey
+    border-top-left-radius: 5px
+    border-top-right-radius: 5px
+    padding: .2em 0 .2em 1em
+    color: $purple
+
+.examples h3 span
+    background: $lightblue
+    color: white
+    font-weight: 700
+    padding: 0 8px
+    border-radius: 3px
+
+.examples pre
+    padding: 1em
+    font-family: $content
+    counter-reset: line
+
+    +mobile
+        overflow-x: scroll
+        padding: 1em 0
+
+        span:before
+            width: 11px
+
+.examples pre span
+
+    line-height: 1.5rem
+    display: block
+
+    +mobile
+        font-size: .8em
+
+    &:before
+
+        counter-increment: line
+        content: counter(line)
+        display: inline-block
+        border-right: 1px solid $beige
+        padding: 0 .5em
+        margin-right: 0.5em
+        width: 22px
+        text-align: right
+        color: white
+
+.examples pre p
+
+    padding: 0 1.5em
+    color: $pink
+    margin-bottom: 1em
+
+    +desktop-up
+        white-space: pre-wrap
+        word-wrap: break-word
+        word-break: break-all

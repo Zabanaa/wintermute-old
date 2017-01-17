@@ -1,0 +1,79 @@
+section.examples
+
+    h2.examples__heading Examples
+
+    article.examples__example
+
+        h3 <span>GET</span> /api/novels/id
+
+        pre
+            span fetch('https://wintermute.design/api/novels/1', {
+            span   method: 'GET'
+            span })
+            span .then( response => // do something with the response )
+            span .catch( error  =>  // do somethong with the error )
+
+    article.examples__example
+
+        h3 <span>POST</span> /api/novels
+
+        pre
+            span fetch('https://wintermute.design/api/novels', {
+            span   method: 'POST',
+            span   body: JSON.stringify({
+            span       name: "Idoru",
+            span       year: 1996,
+            span       authorId: 1 // William Gibson
+            span   })
+            span })
+            span .then( response => // do something with the response )
+            span .catch( error  =>  // do somethong with the error )
+
+    article.examples__example
+
+        h3 <span>PUT</span> /api/novels/id
+
+        pre
+
+            p
+               |  // Please note that if you only wish to partially update a resource, you should do so
+               |  through a PATCH request. PUT requests should be used when you want to update an entire resource.
+
+            span fetch('https://wintermute.design/api/novels/1', {
+            span   method: 'PUT',
+            span   body: JSON.stringify({
+            span       name: "Neuromancer",
+            span       year: 1982,
+            span       authorId: 1 // William Gibson
+            span   })
+            span })
+            span .then( response => // do something with the response )
+            span .catch( error  =>  // do somethong with the error )
+
+    article.examples__example
+
+        h3 <span>PATCH</span> /api/novels/id
+
+        pre
+            p
+                | // At the time of writing, the fetch api does not support PATCH requests, so this example will use the
+                | jQuery.ajax method.
+
+            span $.ajax('https://wintermute.design/api/novels/1', {
+            span   method: 'PATCH',
+            span   body: {
+            span       year: 1984
+            span   }
+            span })
+            span .then( response => // do something with the response )
+
+    article.examples__example
+
+        h3 <span>DELETE</span> /api/novels/id
+
+        pre
+            span fetch('https://wintermute.design/api/novels/1', {
+            span   method: 'DELETE',
+            span })
+            span .then( response => // do something with the response )
+            span .catch( error  =>  // do somethong with the error )

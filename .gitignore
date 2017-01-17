@@ -1,0 +1,10 @@
+node_modules
+.sequelizerc
+*.swp
+*.swo
+.sass-cache
+public
+config/dbConfig.js
+config/config.json
+migrations
+seeders

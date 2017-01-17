@@ -1,0 +1,35 @@
+section.endpoints
+
+.endpoints ul
+    list-style: none
+
+.endpoints ul li
+    margin-bottom: .7em
+    color: white
+
+    +mobile
+        margin-bottom: .5em
+
+    &:before
+        content: "* "
+        color: $lightblue
+
+.endpoints li span
+    background: $pink
+    margin-left: 1em
+    color: white
+
+.endpoints .list-title
+    font-size: 1.3em
+    font-weight: bold
+    color: $beige
+
+    &:before
+        content: ""
+
+.endpoints .wrapper
+    display: flex
+    justify-content: space-between
+
+    +mobile
+        flex-direction: column
