@@ -16,9 +16,9 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 // Views
-app.set('views', './views')
+app.set('views', __dirname + '/views')
 app.set('view engine', 'pug')
-app.use('/public', express.static('public'))
+app.use('/public', express.static(__dirname + '/public'))
 
 // Endpoints
 app.use('/api/characters', api.characterEndpoints)
