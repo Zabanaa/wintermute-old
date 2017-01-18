@@ -38,4 +38,5 @@ gulp.task('watch', () => {
 
 // Default
 gulp.task('default', ['sync', 'scripts', 'sass', 'watch'])
+gulp.task('build', ['scripts', 'sass'])
 
