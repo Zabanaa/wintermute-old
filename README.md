@@ -3,13 +3,14 @@
 =======
 ## The Why
 
-I love cyberpunk. I love API design (really, I do) and I wanted to practice my NodeJS
-skills. So what better way to bring these three things together than using expressJS to build an API of
-famous cyberpunk novels, characters and authors ?
+I love cyberpunk. I love API design (really, I do) and I wanted to practice my
+NodeJS skills. So what better way to bring these three things together than
+using expressJS to build an API of famous cyberpunk novels, characters and
+authors ?
 
-The goal was to make a cleanly designed API available to developers to test their
-applications with. I am fully aware that there are a million of them out there already,
-but let's be honest, they're quite boring.
+The goal was to develop a clean API available to developers to test their
+applications with. I am fully aware that there are a million of them out there
+already, but let's be honest, no one cares about Lorem Ipsum.
 
 # The What
 
@@ -20,7 +21,7 @@ Here's a quick list of wintermute's features:
 - Simple, clean and easy to understand API
 - Support for HasMany relationships
 - Uses PostgreSQL for the database
-- No need to register
+- No need to register (for now)
 - Support for nested resources
 - Compatible with the most popular JS frameworks
 - Secured with SSL
@@ -28,22 +29,7 @@ Here's a quick list of wintermute's features:
 
 # The How
 
-- Show how to get data using fetch (returns a count of all resources, and a url to the
-  resource itself) returns a 204 no content if the collection is empty
-
-- Show how to get resource by id (returns a URL to the nested collection)
-
-- Show how to post a resource ( returns a location header with a link to the resource x
-  201 status code) 409 conflict if unique constraint violation and 422 if missing fields
-
-- Show how to update a resource ( returns a 200 with a message along with the resource)
-  422 if you don't pass it the entire payload
-
-- Show how to patch a resource (returns the resource and a 200)
-
-- Show how to delete a resource (returns a 204 no content)
-
-- Show how to get a nested resource
+You can check out some examples of how to use the API [0](here).
 
 # The things to know about contributing
 
@@ -56,13 +42,14 @@ security etc)
 
 # The things that remain to be done
 
+- [ ] Write a detailed documentation
 - [ ] Implement rate limiting
 - [ ] Implement pagination
 - [ ] Implement caching
 - [ ] Add support for OPTIONS requests
 - [ ] Create better (cleaner) tests
 - [ ] Extract (when possible) controller logic to their own functions (to help with unit
-  tests)
+  testing)
 
 # The things I learned
 
@@ -74,4 +61,4 @@ security etc)
 - ES6 Destructuring of objects
 - Compare equality of arrays
 
-
+[0]: https://wintermute.design
