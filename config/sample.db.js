@@ -3,10 +3,10 @@ let config
 if (process.env.NODE_ENV === "testing") {
 
     config    = {
-        dbname: "dbname",
+        dbname: "wintermute_test",
         dbuser: "dbuser",
         dbhost: "dbhost",
-        dbengine: "dbengine",
+        dbengine: "postgresql",
         dbpassword: "dbpassword"
     }
 
@@ -14,11 +14,11 @@ if (process.env.NODE_ENV === "testing") {
 
 else if (process.env.NODE_ENV === "production") {
 
-    devConfig    = {
+    config    = {
         dbname: "wintermute",
         dbuser: "dbuser",
         dbhost: "dbhost",
-        dbengine: "dbengine",
+        dbengine: "postgresql",
         dbpassword: "dbpassword"
     }
 
@@ -30,7 +30,7 @@ else {
         dbname: "wintermute_dev",
         dbuser: "dbuser",
         dbhost: "dbhost",
-        dbengine: "dbengine",
+        dbengine: "postgresql",
         dbpassword: "dbpassword"
     }
 
