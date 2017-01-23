@@ -1,4 +1,6 @@
 node_modules
+wintermute.psql
+*.psql
 *.swp
 *.swo
 .sass-cache
