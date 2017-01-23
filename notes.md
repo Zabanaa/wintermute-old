@@ -1,5 +1,7 @@
 # Full API Endpoint list
 
+Just testing the tings init
+
 ## Characters
 
 - [x] GET     /api/characters // returns 204 no content if empty array
