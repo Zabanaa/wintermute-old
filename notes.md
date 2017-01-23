@@ -2,6 +2,7 @@
 
 Doing the tings
 
+
 ## Characters
 
 - [x] GET     /api/characters // returns 204 no content if empty array
