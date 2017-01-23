@@ -1,5 +1,6 @@
 # Full API Endpoint list
 
+
 ## Characters
 
 - [x] GET     /api/characters // returns 204 no content if empty array
