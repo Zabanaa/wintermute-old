@@ -11,21 +11,16 @@ chai.use(chaiHttp)
 let request     = chai.request(app)
 let author      = {name: "William Gibson"}
 
+
 describe("Test /api/authors", () => {
 
     beforeEach( done => {
 
-       db.connection.sync({force: true})
+       Author.sync({force: true})
             .then( () => {
                 Author.create(author)
-                    .then( c => {return})
-                    .catch( e => console.log(e.errors))
-
-                Novel.create({name: "Neuromancer", year: "2323", authorId: 1})
-                    .then( n => {return})
-                    .catch( e => console.log(e.errors))
-
-                done()
+                    .then( c => done())
+                    .catch( e => {console.log(e.errors); done() })
             })
             .catch( e => { console.log(e.message); done() })
     })
@@ -43,7 +38,7 @@ describe("Test /api/authors", () => {
                 })
         })
 
-        it("returns a list of all available authors", () => {
+        it("returns a list of all available authors", (done) => {
 
             request.get('/api/authors')
                 .end((err, res) => {
@@ -52,7 +47,8 @@ describe("Test /api/authors", () => {
                     assert.property(res.body, "count")
                     assert.property(res.body, "authors")
                     assert.isArray(res.body.authors)
-                    assert.includes(res.body.authors[0].href, '/api/authors/1')
+                    assert.include(res.body.authors[0].href, '/api/authors/1')
+                    done()
                 })
         })
     })
@@ -88,34 +84,42 @@ describe("Test /api/authors", () => {
 
     describe("TEST GET /api/authors/:id/novels ", () => {
 
+        before( done => {
+            Novel.sync({force: true})
+                .then( () => done())
+                .catch(e => {console.log(e); done()})
+
+        })
+
         it("returns an empty array when there are no novels associated to the author", done => {
 
-            Novel.destroy({ where: {id: 1}})
+            request.get('/api/authors/2/novels')
+                .end( (err, res) => {
+                    assert.equal(res.statusCode, 200)
+                    assert.isArray(res.body.novels)
+                    assert.equal(res.body.novels.length, 0)
+                    done()
+                })
+        })
+
+        it("returns a list of novels associated to the author", (done) => {
+
+            Novel.create({name: "Idoru", year: "2323", authorId: 1})
                 .then( () => {
+
                     request.get('/api/authors/1/novels')
-                        .end( (err, res) => {
+                        .end((err, res) => {
                             assert.equal(res.statusCode, 200)
+                            assert.isObject(res.body)
+                            assert.property(res.body, "count")
+                            assert.property(res.body, "novels")
                             assert.isArray(res.body.novels)
-                            assert.equal(res.body.novels.length, 0)
                             done()
                         })
                 })
-                .catch(e => console.log(e))
-        })
-
-        it("returns a list of characters associated to the novel", () => {
-
-            request.get('/api/authors/1/characters')
-                .end((err, res) => {
-                    assert.equal(res.statusCode, 200)
-                    assert.isObject(res.body)
-                    assert.property(res.body, "count")
-                    assert.property(res.body, "novels")
-                    assert.isArray(res.body.novels)
-                })
+                .catch( err => {console.log(err.errors); done()})
         })
     })
-
 
     describe("Test POST /api/authors/", () => {
 
@@ -130,7 +134,6 @@ describe("Test /api/authors", () => {
         })
 
         it("successfully saves the resource to the DB", (done) => {
-
 
             request.post('/api/authors')
                .send(sterling)
@@ -180,7 +183,7 @@ describe("Test /api/authors", () => {
 
         it("returns a 400 when passing an incomplete payload", (done) => {
            request.put(`/api/authors/1`)
-               .send({nationality: "CanadianFanfan la tulipe"})
+               .send({nationality: "Canadian"})
                .end( (err, res) => {
                    assert.equal(res.statusCode, 400)
                    assert.equal(res.body.statusCode, 400)
@@ -201,6 +204,7 @@ describe("Test /api/authors", () => {
                    assert.equal(res.body.message, "Author successfully updated")
                    done()
                })
+
         })
     })
 

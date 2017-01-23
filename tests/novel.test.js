@@ -15,20 +15,13 @@ describe("Test /api/novels", () => {
 
     beforeEach( done => {
 
-       db.connection.sync({force: true})
+        Novel.sync({force: true})
             .then( () => {
-
                 Novel.create(novel)
-                    .then( c => { return })
-                    .catch( e => console.log("Something Happened"))
-
-                Character.create({name: "Case", novelId: 1})
-                    .then( () => { return })
-                    .catch( e => console.log("Something happened"))
-
-                    done()
+                    .then( () => done())
+                    .catch( err => { console.log("Error ", err.message); done() })
             })
-            .catch( e => { done() })
+            .catch( err => { console.log("Error ", err.message); done() })
     })
 
     describe("TEST GET /api/novels ", () => {
@@ -44,7 +37,7 @@ describe("Test /api/novels", () => {
                 })
         })
 
-        it("returns a list of all available novels", () => {
+        it("returns a list of all available novels", (done) => {
 
             request.get('/api/novels')
                 .end((err, res) => {
@@ -54,11 +47,24 @@ describe("Test /api/novels", () => {
                     assert.property(res.body, "novels")
                     assert.isArray(res.body.novels)
                     assert.include(res.body.novels[0].href, '/api/novels/1')
+                    done()
                 })
         })
     })
 
     describe("TEST GET /api/novels/:id/characters ", () => {
+
+        beforeEach( done => {
+
+            Character.sync({force: true})
+                .then( () => {
+                    Character.create({name: "Case", novelId: 1})
+                        .then( () => done() )
+                        .catch( err => {console.log(err); done()})
+                })
+                .catch( err => {console.log(err); done()})
+
+        })
 
         it("returns an empty array when there are no characters associated to the novel", done => {
 
@@ -75,17 +81,18 @@ describe("Test /api/novels", () => {
                 .catch( e => done() )
         })
 
-        it("returns a list of characters associated to the novel", () => {
+        it("returns a list of characters associated to the novel", (done) => {
 
             request.get('/api/novels/1/characters')
+
                 .end((err, res) => {
                     assert.equal(res.statusCode, 200)
                     assert.isObject(res.body)
                     assert.property(res.body, "count")
                     assert.property(res.body, "characters")
                     assert.isArray(res.body.characters)
+                    done()
                 })
-
         })
     })
 
@@ -104,7 +111,6 @@ describe("Test /api/novels", () => {
         })
 
         it("Returns a 404 when the requested novel does not exist", done => {
-
             request.get('/api/novels/4')
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 404)
@@ -194,7 +200,13 @@ describe("Test /api/novels", () => {
         it("returns a 200 when passing a complete payload", (done) => {
 
             request.put(`/api/novels/1`)
-               .send({ name: "Fanfan la tulipe", year: "1223", author: "kjkjk", plot: "Somewhere in the sprawl", authorId: null })
+               .send({
+                   name: "Fanfan la tulipe",
+                   year: "1223",
+                   author: "kjkjk",
+                   plot: "Somewhere in the sprawl",
+                   authorId: null
+               })
                .end( (err, res) => {
                    assert.equal(res.statusCode, 200)
                    assert.equal(res.body.statusCode, 200)

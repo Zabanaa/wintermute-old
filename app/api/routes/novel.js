@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
             statusCode  = 200
             novels.map( n => n.serialise(protocol, hostname, `/api/novels/${n.dataValues.id}`) )
             novels.map( n => n.dataValues.characters =
-                `${protocol}://${hostname}/api/novels${n.dataValues.id}/characters`)
+                `${protocol}://${hostname}/api/novels/${n.dataValues.id}/characters`)
             return res.status(statusCode).json({type, statusCode, count, novels})
 
         })

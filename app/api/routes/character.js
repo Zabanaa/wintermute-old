@@ -17,7 +17,6 @@ router.get('/', (req, res) => {
             statusCode  = 200
             characters.map( c => c.serialise(protocol, host, `/api/characters/${c.dataValues.id}`) )
             return res.status(statusCode).json({type, statusCode, count, characters})
-
         })
         .catch( error => {let e = errors.handle(error); return res.status(e.statusCode).json(e.responseBody)})
 })

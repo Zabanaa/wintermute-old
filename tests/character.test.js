@@ -13,20 +13,24 @@ let character   = {name: "Case"}
 describe("Test /api/characters", () => {
 
     beforeEach( done => {
-
-       db.connection.sync({force: true})
-            .then( () => {
+        Character.sync({force: true})
+            .then( c => {
                 Character.create(character)
-                    .then( c => {return})
-                    .catch( e => console.log(e.errors))
-                    done()
+                    .then( () => done() )
+                    .catch( e => {console.log(e.errors); done()} )
             })
-            .catch( e => { console.log(e.message); done() })
+            .catch( e => {console.log(e.errors); done()} )
+    })
+
+    after( done => {
+        Character.sync({force: true})
+            .then( () => done())
+            .catch( err => console.log(err) )
     })
 
     describe("TEST GET /api/characters ", () => {
 
-        it("returns a 204 when there are no characters", done => {
+        it("returns a 204 when there are no characters", (done) => {
             Character.destroy({ where: {id: 1}})
             request.get('/api/characters')
                 .end( (err, res) => {
@@ -37,23 +41,23 @@ describe("Test /api/characters", () => {
                 })
         })
 
-        it("returns a list of all available characters", () => {
+        it("returns a list of all available characters", (done) => {
 
             request.get('/api/characters')
                 .end((err, res) => {
                     assert.equal(res.statusCode, 200)
                     assert.isObject(res.body)
-                    assert.property(res.body, "count")
-                    assert.property(res.body, "characters")
-                    assert.isArray(res.body.characters)
-                    assert.includes(res.body.characters[0].href, '/api/characters/1')
+                    assert.notEqual(res.body.count, 0)
+                    assert.notEqual(res.body.characters.length, 0)
+                    assert.include(res.body.characters[0].href, '/api/characters/1')
+                    done()
                 })
         })
     })
 
-    describe("TEST GET /api/characters/:id", done => {
+    describe("TEST GET /api/characters/:id", () => {
 
-        it("should return the corresponding character based on the id", done => {
+        it("should return the corresponding character based on the id", (done) => {
             request.get('/api/characters/1')
                 .end( (err, res) => {
                     assert.isFalse(res.error)
@@ -65,7 +69,8 @@ describe("Test /api/characters", () => {
                 })
         })
 
-        it("Returns a 404 when the requested character does not exist", done => {
+
+        it("Returns a 404 when the requested character does not exist", (done) => {
 
             request.get('/api/characters/4')
                 .end( (err, res) => {
@@ -83,10 +88,9 @@ describe("Test /api/characters", () => {
     describe("Test POST /api/characters/", () => {
 
         let molly    = { name: "Molly Millions" }
-        let armitage = { name: "Armitage" }
+        let ratz = { name: "Ratz" }
 
         beforeEach( done => {
-
             Character.create(molly)
                 .then( c => done())
                 .catch( e => { console.log("Shit happened, figure it out" + e); done() } )
@@ -94,9 +98,8 @@ describe("Test /api/characters", () => {
 
         it("successfully saves the resource to the DB", (done) => {
 
-
             request.post('/api/characters')
-               .send(armitage)
+               .send(ratz)
                .end( (err, res) => {
                    assert.isTrue(res.ok)
                    assert.isFalse(res.error)
@@ -111,6 +114,7 @@ describe("Test /api/characters", () => {
                 })
         })
 
+
         it("Returns a 409 when passed an already existing character", (done) => {
 
             request.post('/api/characters')
@@ -120,10 +124,10 @@ describe("Test /api/characters", () => {
                     assert.property(res.body, 'type')
                     assert.equal(res.body.type, 'error')
                     assert.equal(res.body.message, 'A resource with the following fields already exists in the database.')
-                    assert.isArray(res.body.fields)
                     done()
+
                 })
-            })
+        })
 
         it("Returns a 422 when missing one or more required fields", (done) => {
 
@@ -157,7 +161,7 @@ describe("Test /api/characters", () => {
                })
         })
 
-        it("returns a 200 when passing a complete payload", (done) => {
+        it("renturns a 200 when passing a complete payload", (done) => {
 
             request.put(`/api/characters/1`)
                .send({
