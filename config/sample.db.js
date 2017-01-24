@@ -1,39 +1,14 @@
 let config
 
-if (process.env.NODE_ENV === "testing") {
-
-    config    = {
-        dbname: "wintermute_test",
-        dbuser: "dbuser",
-        dbhost: "dbhost",
-        dbengine: "postgresql",
-        dbpassword: "dbpassword"
-    }
-
+try {
+    let creds
+    creds = { DB_NAME, DB_USER, DB_HOST, DB_ENGINE, DB_PASSWORD } = process.env
+    config = { dbname, dbuser, dbhost, dbengine, dbpassword } = creds
+    module.exports = config
 }
 
-else if (process.env.NODE_ENV === "production") {
+catch(error) {
 
-    config    = {
-        dbname: "wintermute",
-        dbuser: "dbuser",
-        dbhost: "dbhost",
-        dbengine: "postgresql",
-        dbpassword: "dbpassword"
-    }
-
+    let err = "Error connecting to the databse. Environment variables not set"
+    throw new Error(err)
 }
-
-else {
-
-    config    = {
-        dbname: "wintermute_dev",
-        dbuser: "dbuser",
-        dbhost: "dbhost",
-        dbengine: "postgresql",
-        dbpassword: "dbpassword"
-    }
-
-}
-
-module.exports = config
