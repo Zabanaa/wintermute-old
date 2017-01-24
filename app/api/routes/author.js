@@ -16,8 +16,8 @@ router.get('/', (req, res) => {
             let count  = authors.length
             type       = "success"
             statusCode  = 200
-            authors.map( a => a.serialise(protocol, host, `/api/authors/${a.dataValues.id}`) )
-            authors.map( a => a.dataValues.novels = `${protocol}://${host}/api/authors/${a.dataValues.id}/novels`)
+            authors.map( a => a.serialise(`/api/authors/${a.dataValues.id}`) )
+            authors.map( a => a.dataValues.novels = `/api/authors/${a.dataValues.id}/novels`)
             return res.status(statusCode).json({type, statusCode, count, authors})
         })
         .catch( error => {let e = errors.handle(error); return res.status(e.statusCode).json(e.responseBody)})
@@ -32,7 +32,7 @@ router.get('/:id', (req, res) => {
     Author.findById(req.params.id)
         .then( author => {
             if (author === null) { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) }
-            author.dataValues.novels = `${protocol}://${hostname}/api/authors/${author.dataValues.id}/novels`
+            author.dataValues.novels = `/api/authors/${author.dataValues.id}/novels`
             return res.status(200).json(author)
         })
         .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
@@ -66,8 +66,8 @@ router.post('/', (req, res) => {
             statusCode                   = 201
             message                      = "Author was successfully created"
             uri                          = `/api/authors/${author.dataValues.id}`
-            author.dataValues.novels     = `${protocol}://${host}${uri}/novels`
-            author.serialise(protocol, host, uri)
+            author.dataValues.novels     = `${uri}/novels`
+            author.serialise(uri)
             return res.location(author.dataValues.href).status(statusCode).json({type, statusCode, message, author})
         })
         .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })

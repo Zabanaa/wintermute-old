@@ -15,9 +15,10 @@ router.get('/', (req, res) => {
 
             type       = "success"
             statusCode  = 200
-            novels.map( n => n.serialise(protocol, hostname, `/api/novels/${n.dataValues.id}`) )
+
+            novels.map( n => n.serialise(`/api/novels/${n.dataValues.id}`) )
             novels.map( n => n.dataValues.characters =
-                `${protocol}://${hostname}/api/novels/${n.dataValues.id}/characters`)
+                `/api/novels/${n.dataValues.id}/characters`)
             return res.status(statusCode).json({type, statusCode, count, novels})
 
         })
@@ -33,7 +34,7 @@ router.get('/:id', (req, res) => {
 
         .then( novel => {
             if (novel === null) { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) }
-            novel.dataValues.characters = `${protocol}://${hostname}/api/novels/${novel.dataValues.id}/characters`
+            novel.dataValues.characters = `/api/novels/${novel.dataValues.id}/characters`
             return res.status(200).json(novel)
         })
         .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
@@ -72,8 +73,8 @@ router.post('/', (req, res) => {
             statusCode                  = 201
             message                     = "Novel was successfully added"
             uri                         = `/api/novels/${novel.dataValues.id}`
-            novel.dataValues.characters = `${protocol}://${hostname}${uri}/characters`
-            novel.serialise(protocol, hostname, uri)
+            novel.dataValues.characters = `${uri}/characters`
+            novel.serialise(uri)
             return res.location(novel.dataValues.href).status(statusCode).json({type, statusCode, message, novel})
         })
         .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })

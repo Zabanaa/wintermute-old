@@ -24,7 +24,7 @@ describe("Test Character.update", () => {
 
     it("adds a href attribute to the object", () => {
 
-        let serialised = benz.serialise('https', 'localhost', `/api/characters/${benz.dataValues.id}`)
+        let serialised = benz.serialise(`/api/characters/${benz.dataValues.id}`)
         assert.property(benz.dataValues, 'href')
         assert.include(benz.dataValues.href, `/api/characters/${benz.dataValues.id}`)
 

@@ -1,8 +1,8 @@
-const serialise         = function(protocol, host, resourceURI) {
+const serialise         = function(resourceURI) {
 
     // alter the instance
     // add a href url equal to protocol + host + /api/characters/:id
-    return this.dataValues.href = `${protocol}://${host}${resourceURI}`
+    return this.dataValues.href = `${resourceURI}`
 }
 
 

@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
             let count  = characters.length
             type       = "success"
             statusCode  = 200
-            characters.map( c => c.serialise(protocol, host, `/api/characters/${c.dataValues.id}`) )
+            characters.map( c => c.serialise(`/api/characters/${c.dataValues.id}`) )
             return res.status(statusCode).json({type, statusCode, count, characters})
         })
         .catch( error => {let e = errors.handle(error); return res.status(e.statusCode).json(e.responseBody)})
@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
             statusCode = 201
             message    = "Character was successfully created"
             uri        = `/api/characters/${character.dataValues.id}`
-            character.serialise(protocol, host, uri)
+            character.serialise(uri)
             return res.location(character.dataValues.href).status(statusCode).json({type, statusCode, message, character})
         })
         .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
