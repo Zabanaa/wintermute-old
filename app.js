@@ -31,13 +31,18 @@ app.get('/', (req, res) => {
 })
 
 // Start app
-// app.listen takes also a config object containing the host and the port in case we want
+// app.listen takes also a config object containing the
+// host and the port in case we want
 // to chage those
 
 db.connection.authenticate()
     .then( () => {
-        app.listen(port, () => console.log(`App started. Server listening on port ${port}`))
+
+        app.listen(port, () => {
+            console.log(`App started. Server listening on port ${port}`)
+        })
+
     })
-    .catch( e => console.log(e))
+    .catch( error => console.log(error))
 
 module.exports = app

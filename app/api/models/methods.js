@@ -1,7 +1,9 @@
 const serialise         = function(resourceURI) {
 
     // alter the instance
-    // add a href url equal to protocol + host + /api/characters/:id
+    // add a href attribute to the URL that will look like
+    // /api/characters/:id
+
     return this.dataValues.href = `${resourceURI}`
 }
 
@@ -17,7 +19,8 @@ const serialise         = function(resourceURI) {
 
 const isIdenticalTo     = function(requestBody) {
 
-    if (!requestBody && typeof(requestBody) !== "object") throw new Error("Please provide an object")
+    if (!requestBody && typeof(requestBody) !== "object")
+        throw new Error("Please provide an object")
 
     let characterKeys   = Object.keys(this.dataValues)
         .filter(key => key !== 'id' && key !== 'createdAt' && key !== 'updatedAt')

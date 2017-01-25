@@ -13,29 +13,48 @@ router.get('/', (req, res) => {
     Author.findAll()
         .then( authors => {
             let type, statusCode, message
-            let count  = authors.length
-            type       = "success"
+            let count   = authors.length
+            type        = "success"
             statusCode  = 200
             authors.map( a => a.serialise(`/api/authors/${a.dataValues.id}`) )
-            authors.map( a => a.dataValues.novels = `/api/authors/${a.dataValues.id}/novels`)
-            return res.status(statusCode).json({type, statusCode, count, authors})
+            authors.map( a => {
+                let novelsUri = `/api/authors/${a.dataValues.id}/novels`
+                return a.dataValues.novels = novelsUri
+            })
+            return res
+                    .status(statusCode)
+                    .json({type, statusCode, count, authors})
         })
-        .catch( error => {let e = errors.handle(error); return res.status(e.statusCode).json(e.responseBody)})
+        .catch( error => {
+            let e = errors.handle(error)
+            return res.status(e.statusCode).json(e.responseBody)
+        })
 })
 
 // GET /api/authors/:id
 router.get('/:id', (req, res) => {
 
+    let authorNovelsUri
     let protocol = req.protocol
     let hostname = req.hostname
 
     Author.findById(req.params.id)
         .then( author => {
-            if (author === null) { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) }
-            author.dataValues.novels = `/api/authors/${author.dataValues.id}/novels`
+
+            if (author === null) {
+                let e = errors.notFound()
+                return res.status(e.statusCode).json(e.responseBody)
+            }
+
+            authorNovelsUri = `/api/authors/${author.dataValues.id}/novels`
+            author.dataValues.novels = authorNovelsUri
+
             return res.status(200).json(author)
         })
-        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
+        .catch( error => {
+            let e = errors.notFound()
+            return res.status(e.statusCode).json(e.responseBody)
+        })
 })
 
 // GET /api/authors/:id/novels
@@ -43,13 +62,21 @@ router.get('/:id/novels', (req, res) => {
 
     Novel.findAll({ where: {authorId: req.params.id}})
         .then( novels => {
+
             let type, statusCode
             let count = novels.length
+
             type         = "success"
             statusCode   = 200
-            return res.status(statusCode).json({type, statusCode, count, novels})
+
+            return res
+                    .status(statusCode)
+                    .json({type, statusCode, count, novels})
         })
-        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
+        .catch( error => {
+            let e = errors.notFound()
+            return res.status(e.statusCode).json(e.responseBody)
+        })
 })
 
 // POST /api/authors
@@ -62,15 +89,21 @@ router.post('/', (req, res) => {
 
     Author.create(data)
         .then( author => {
-            type                         = "success"
-            statusCode                   = 201
-            message                      = "Author was successfully created"
-            uri                          = `/api/authors/${author.dataValues.id}`
-            author.dataValues.novels     = `${uri}/novels`
+            type                       = "success"
+            statusCode                 = 201
+            message                    = "Author was successfully created"
+            uri                        = `/api/authors/${author.dataValues.id}`
+            author.dataValues.novels   = `${uri}/novels`
             author.serialise(uri)
-            return res.location(author.dataValues.href).status(statusCode).json({type, statusCode, message, author})
+            return res
+                    .location(author.dataValues.href)
+                    .status(statusCode)
+                    .json({type, statusCode, message, author})
         })
-        .catch( error => { let err = errors.handle(error); return res.status(err.statusCode).json(err.responseBody) })
+        .catch( error => {
+            let err = errors.handle(error)
+            return res.status(err.statusCode).json(err.responseBody)
+        })
 })
 
 // PUT /api/authors/:id
@@ -89,8 +122,17 @@ router.put('/:id', (req, res) => {
                 data        = {name, nationality } = req.body
 
                 author.update(data)
-                    .then( () => res.status(statusCode).json({type, statusCode, message, author}))
-                    .catch( err => {let e = errors.handle(err); return res.status(e.statusCode).json(e.responseBody)})
+                    .then( () => {
+                        return res
+                                .status(statusCode)
+                                .json({type, statusCode, message, author})
+                    })
+                    .catch( err => {
+                        let e = errors.handle(err)
+                        return res
+                                .status(e.statusCode)
+                                .json(e.responseBody)
+                    })
 
             } else {
                 type        = "error"
@@ -100,7 +142,10 @@ router.put('/:id', (req, res) => {
             }
 
         })
-        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
+        .catch( error => {
+                let e = errors.notFound()
+                return res.status(e.statusCode).json(e.responseBody)
+        })
 })
 
 // PATCH /api/authors/:id
@@ -119,21 +164,33 @@ router.patch('/:id', (req, res) => {
                     type        = "success"
                     statusCode  = 200
                     message     = "Update successful"
-                    return res.status(200).json({type, statusCode, message, author})
+                    return res
+                            .status(200)
+                            .json({type, statusCode, message, author})
                 })
-                .catch( error => { let e =  errors.handle(error); return res.status(e.statusCode).json(e.responseBody) })
+                .catch( error => {
+                    let e =  errors.handle(error)
+                    return res.status(e.statusCode).json(e.responseBody)
+                })
         })
 
         // :id doesn't match any record in the database -> 404 bitch where ?
-        .catch( error => { let e = errors.notFound(); return res.status(e.statusCode).json(e.responseBody) })
+        .catch( error => {
+            let e = errors.notFound()
+            return res.status(e.statusCode).json(e.responseBody)
+        })
 })
 
 // DELETE /api/authors/:id
 router.delete('/:id', (req, res) => {
 
     Author.destroy({ where: {id: req.params.id} })
-        .then( () => { return res.status(204).end() })
-        .catch( error => res.status(400).json({ type:"error", message:"Bad request" }))
+        .then( () => res.status(204).end() )
+        .catch( error => {
+            return res
+                    .status(400)
+                    .json({ type:"error", message:"Bad request" })
+        })
 })
 
 module.exports = router
