@@ -6,6 +6,7 @@ const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const db        = require('../config')
 const assert    = chai.assert
+const token     = process.env.SECRET_TOKEN
 
 chai.use(chaiHttp)
 let request     = chai.request(app)
@@ -136,6 +137,7 @@ describe("Test /api/authors", () => {
         it("successfully saves the resource to the DB", (done) => {
 
             request.post('/api/authors')
+               .set('x-access-token', token)
                .send(sterling)
                .end( (err, res) => {
                    assert.isTrue(res.ok)
@@ -151,6 +153,7 @@ describe("Test /api/authors", () => {
         it("Returns a 409 when passed an already existing author", (done) => {
 
             request.post('/api/authors')
+                .set('x-access-token', token)
                 .send(asimov)
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 409)
@@ -167,6 +170,7 @@ describe("Test /api/authors", () => {
             fakeAuthor = { nationality: "French" }
 
             request.post('/api/authors')
+                .set('x-access-token', token)
                 .send(fakeAuthor)
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 422)
@@ -183,6 +187,7 @@ describe("Test /api/authors", () => {
 
         it("returns a 400 when passing an incomplete payload", (done) => {
            request.put(`/api/authors/1`)
+               .set('x-access-token', token)
                .send({nationality: "Canadian"})
                .end( (err, res) => {
                    assert.equal(res.statusCode, 400)
@@ -196,6 +201,7 @@ describe("Test /api/authors", () => {
         it("returns a 200 when passing a complete payload", (done) => {
 
             request.put(`/api/authors/1`)
+               .set('x-access-token', token)
                .send({ name: "Fanfan la tulipe", nationality: "Mexican" })
                .end( (err, res) => {
                    assert.equal(res.statusCode, 200)
@@ -213,6 +219,7 @@ describe("Test /api/authors", () => {
         it("should return a 200 when successful", done => {
 
             request.patch(`/api/authors/1`)
+                .set('x-access-token', token)
                 .send({name: "Bennnnnz"})
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 200)
@@ -230,6 +237,7 @@ describe("Test /api/authors", () => {
 
         it("should return a 204 when successful", done => {
                 request.delete(`/api/authors/1`)
+                    .set('x-access-token', token)
                     .end( (err, res) => {
                     assert.equal(res.statusCode, 204)
                     done()

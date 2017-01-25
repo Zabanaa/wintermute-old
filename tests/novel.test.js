@@ -6,6 +6,7 @@ const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const db        = require('../config')
 const assert    = chai.assert
+const token     = process.env.SECRET_TOKEN
 
 chai.use(chaiHttp)
 let request     = chai.request(app)
@@ -141,6 +142,7 @@ describe("Test /api/novels", () => {
             fakeNovel = { author: "William Gibson", plot: "Cool story bro, you should check it out." }
 
             request.post('/api/novels')
+                .set('x-access-token', token)
                 .send(fakeNovel)
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 422)
@@ -155,6 +157,7 @@ describe("Test /api/novels", () => {
         it("successfully saves the resource to the DB", (done) => {
 
             request.post('/api/novels')
+               .set('x-access-token', token)
                .send(idoru)
                .end( (err, res) => {
                    assert.isTrue(res.ok)
@@ -170,6 +173,7 @@ describe("Test /api/novels", () => {
         it("Returns a 409 when passed an already existing novels", (done) => {
 
             request.post('/api/novels')
+                .set('x-access-token', token)
                 .send(countZero)
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 409)
@@ -187,6 +191,7 @@ describe("Test /api/novels", () => {
 
         it("returns a 400 when passing an incomplete payload", (done) => {
            request.put(`/api/novels/1`)
+               .set('x-access-token', token)
                .send({name: "Fanfan la tulipe"})
                .end( (err, res) => {
                    assert.equal(res.statusCode, 400)
@@ -200,6 +205,7 @@ describe("Test /api/novels", () => {
         it("returns a 200 when passing a complete payload", (done) => {
 
             request.put(`/api/novels/1`)
+               .set('x-access-token', token)
                .send({
                    name: "Fanfan la tulipe",
                    year: "1223",
@@ -222,6 +228,7 @@ describe("Test /api/novels", () => {
         it("should return a 200 when successful", done => {
 
             request.patch(`/api/novels/1`)
+                .set('x-access-token', token)
                 .send({name: "Bennnnnz"})
                 .end( (err, res) => {
                     assert.equal(res.statusCode, 200)
@@ -239,6 +246,7 @@ describe("Test /api/novels", () => {
 
         it("should return a 204 when successful", done => {
                 request.delete(`/api/novels/1`)
+                    .set('x-access-token', token)
                     .end( (err, res) => {
                     assert.equal(res.statusCode, 204)
                     done()
