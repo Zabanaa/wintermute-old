@@ -14,6 +14,7 @@ app.use( (req, res, next) => {
 })
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
+app.disable('x-powered-by')
 
 // Views
 app.set('views', __dirname + '/views')
