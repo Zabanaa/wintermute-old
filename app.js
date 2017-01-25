@@ -6,6 +6,20 @@ const port              = process.env.PORT || 3000
 const db                = require('./config')
 const api               = require('./app/api/')
 
+// Basic Auth Middleware
+app.use('/api', (req, res, next) => {
+    if(req.method != "get"){
+        // check if the request is post put patch or delete
+        // if it is, check if the request headers contain a X-auth-token header
+        // if so, check if the token passed matched process.env.token
+        // if so app.globals.authenticated == true
+        // else app.globals.authenticated == false
+        console.log("You have made a %s", req.method)
+    }
+    next()
+
+})
+
 // Middleware
 app.use( (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*")
