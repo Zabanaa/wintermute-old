@@ -8,13 +8,29 @@ const api               = require('./app/api/')
 
 // Basic Auth Middleware
 app.use('/api', (req, res, next) => {
+
+    const method          = req.method
+    const headers         = req.headers
+    const secretToken     = process.env.SECRET_TOKEN
+
     if(req.method != "get"){
-        // check if the request is post put patch or delete
-        // if it is, check if the request headers contain a X-auth-token header
-        // if so, check if the token passed matched process.env.token
-        // if so app.globals.authenticated == true
-        // else app.globals.authenticated == false
-        console.log("You have made a %s", req.method)
+
+        if("x-access-token" in headers) {
+
+
+            if (headers["x-access-token"] === secretToken) {
+
+                app.locals.authenticated = true
+
+            } else {
+
+                app.locals.authenticated = false
+
+                return res
+                        .status(401)
+                        .json({type: "error", message: "Invalid Access Token"})
+            }
+        }
     }
     next()
 
