@@ -5,36 +5,8 @@ const bodyParser        = require('body-parser')
 const port              = process.env.PORT || 3000
 const db                = require('./config')
 const api               = require('./app/api/')
-
-// Basic Auth Middleware
-app.use('/api', (req, res, next) => {
-
-    const method          = req.method
-    const headers         = req.headers
-    const secretToken     = process.env.SECRET_TOKEN
-
-    if(req.method != "get"){
-
-        if("x-access-token" in headers) {
-
-
-            if (headers["x-access-token"] === secretToken) {
-
-                app.locals.authenticated = true
-
-            } else {
-
-                app.locals.authenticated = false
-
-                return res
-                        .status(401)
-                        .json({type: "error", message: "Invalid Access Token"})
-            }
-        }
-    }
-    next()
-
-})
+const middleware        = require('./app/api/middleware')
+const checkAuth         = middleware.checkAuth
 
 // Middleware
 app.use( (req, res, next) => {
@@ -50,6 +22,9 @@ app.disable('x-powered-by')
 app.set('views', __dirname + '/views')
 app.set('view engine', 'pug')
 app.use('/public', express.static(__dirname + '/public'))
+
+// Basic Auth Middleware for non GET requests
+app.use('/api', checkAuth)
 
 // Endpoints
 app.use('/api/characters', api.characterEndpoints)
