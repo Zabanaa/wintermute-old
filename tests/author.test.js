@@ -91,7 +91,7 @@ describe("Test /api/authors", () => {
 
         })
 
-        it("returns an empty array when there are no novels associated to the author", done => {
+        it("returns empty array when author has no novels associated", done => {
 
             request.get('/api/authors/2/novels')
                 .end( (err, res) => {
