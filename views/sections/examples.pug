@@ -18,6 +18,8 @@ section.examples
         h3 <span>POST</span> /api/novels
 
         pre
+            p // The resource will not be created in the server but will be returned as if
+
             span fetch('https://wintermute.design/api/novels', {
             span   method: 'POST',
             span   body: JSON.stringify({
@@ -35,9 +37,7 @@ section.examples
 
         pre
 
-            p
-               |  // Please note that if you only wish to partially update a resource, you should do so
-               |  through a PATCH request. PUT requests should be used when you want to update an entire resource.
+            p // The resource will not be updated in the server but will be returned as if
 
             span fetch('https://wintermute.design/api/novels/1', {
             span   method: 'PUT',
@@ -55,6 +55,8 @@ section.examples
         h3 <span>PATCH</span> /api/novels/id
 
         pre
+            p // The resource will not be patched in the server but will be returned as if
+
             p
                 | // At the time of writing, the fetch api does not support PATCH requests, so this example will use the
                 | jQuery.ajax method.
@@ -67,11 +69,15 @@ section.examples
             span })
             span .then( response => // do something with the response )
 
+
     article.examples__example
 
         h3 <span>DELETE</span> /api/novels/id
 
         pre
+
+            p // The resource will not be deleted in the server. a 204 status code will be returned
+
             span fetch('https://wintermute.design/api/novels/1', {
             span   method: 'DELETE',
             span })
