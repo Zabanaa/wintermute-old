@@ -2,238 +2,267 @@ const Sequelize = require('sequelize')
 const app       = require('../app')
 const Author    = require('../app/api/models/author')
 const Novel     = require('../app/api/models/novel')
+const Character = require('../app/api/models/character')
 const chai      = require('chai')
 const chaiHttp  = require('chai-http')
 const db        = require('../config')
 const assert    = chai.assert
+const token     = process.env.SECRET_TOKEN
 
 chai.use(chaiHttp)
 let request     = chai.request(app)
-let author      = {name: "William Gibson"}
+let author      = {id: 45, name: "William Gibson"}
+let idoru       = {id: 12, name: "Idoru", year: 1997}
+let _case       = {id: 24, name: "Case"}
+
+describe("TEST unauthenticated routes", () => {
 
 
-// describe("Test /api/authors", () => {
+    describe("TEST CHARACTER REQUESTS", () => {
 
-//     beforeEach( done => {
+        beforeEach( done => {
+            Character.sync({force: true})
+                .then( () => {
+                    Character.create(_case)
+                        .then( () => done() )
+                        .catch( err => { console.log(err); done() })
+                })
+                .catch( err => console.log(err) )
 
-//        Author.sync({force: true})
-//             .then( () => {
-//                 Author.create(author)
-//                     .then( c => done())
-//                     .catch( e => {console.log(e.errors); done() })
-//             })
-//             .catch( e => { console.log(e.message); done() })
-//     })
+        })
 
-//     describe("TEST GET /api/authors ", () => {
+        it("returns the req.body object with the correct id - POST", done => {
+            request.post('/api/characters')
+                .send({name: "molly"})
+                .end( (err, res) => {
+                    assert.equal(res.body.id, 1)
+                    assert.equal(res.body.name, "molly")
+                    assert.notProperty(res.body, 'bio')
+                })
 
-//         it("returns an empty array when there are no authors", done => {
-//             Author.destroy({ where: {id: 1}})
-//             request.get('/api/authors')
-//                 .end( (err, res) => {
-//                     assert.equal(res.statusCode, 200)
-//                     assert.isArray(res.body.authors)
-//                     assert.equal(res.body.authors.length, 0)
-//                     done()
-//                 })
-//         })
+            request.get('/api/characters/24')
+                .end( (err, res ) => {
+                    assert.propertyVal(res.body, 'name', 'Case')
+                    assert.propertyVal(res.body, 'age', 'Unknown')
+                    done()
+                })
 
-//         it("returns a list of all available authors", (done) => {
+        })
 
-//             request.get('/api/authors')
-//                 .end((err, res) => {
-//                     assert.equal(res.statusCode, 200)
-//                     assert.isObject(res.body)
-//                     assert.property(res.body, "count")
-//                     assert.property(res.body, "authors")
-//                     assert.isArray(res.body.authors)
-//                     assert.include(res.body.authors[0].href, '/api/authors/1')
-//                     done()
-//                 })
-//         })
-//     })
+        it("returns the req.body object with the correct id - PUT", done => {
+            request.put('/api/characters/24')
+                .send({name: "Ratz", age: 32})
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'id', 1)
+                    assert.propertyVal(res.body, 'name', "Ratz")
+                    assert.notProperty(res.body, 'bio')
+                })
 
-//     describe("TEST GET /api/authors/:id", done => {
+            request.get('/api/characters/24')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'Case')
+                    assert.propertyVal(res.body, 'age', 'Unknown')
+                    done()
+                })
 
-//         it("should return the corresponding author based on the id", done => {
-//             request.get('/api/authors/1')
-//                 .end( (err, res) => {
-//                     assert.isFalse(res.error)
-//                     assert.equal(res.statusCode, 200)
-//                     assert.isObject(res.body)
-//                     assert.property(res.body, 'id')
-//                     assert.equal(res.body.id, 1)
-//                     done()
-//                 })
-//         })
+        })
 
-//         it("Returns a 404 when the requested author does not exist", done => {
+        it("returns the req.body object with the correct id - PATCH", done => {
+            request.patch('/api/characters/24')
+                .send({name: "Riviera"})
+                .end( (err, res) => {
+                    assert.equal(res.body.id, 1)
+                    assert.equal(res.body.name, "Riviera")
+                    assert.notProperty(res.body, 'bio')
+                })
 
-//             request.get('/api/authors/4')
-//                 .end( (err, res) => {
-//                     assert.equal(res.statusCode, 404)
-//                     assert.isObject(res.body)
-//                     assert.property(res.body, 'type')
-//                     assert.equal(res.body.type, 'error')
-//                     assert.property(res.body, 'message')
-//                     assert.include(res.body.message, 'not found')
-//                     done()
-//                 })
-//         })
-//     })
+            request.get('/api/characters/24')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'Case')
+                    assert.propertyVal(res.body, 'age', 'Unknown')
+                    done()
+                })
 
-//     describe("TEST GET /api/authors/:id/novels ", () => {
+        })
 
-//         before( done => {
-//             Novel.sync({force: true})
-//                 .then( () => done())
-//                 .catch(e => {console.log(e); done()})
+        it("returns the req.body object with the correct id - DELETE", done => {
+            request.delete('/api/characters/24')
+                .end( (err, res) => {
+                    assert.equal(res.statusCode, 204)
+                })
 
-//         })
+            request.get('/api/characters/24')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'Case')
+                    assert.propertyVal(res.body, 'age', 'Unknown')
+                    done()
+                })
+        })
 
-//         it("returns empty array when author has no novels associated", done => {
+    })
 
-//             request.get('/api/authors/2/novels')
-//                 .end( (err, res) => {
-//                     assert.equal(res.statusCode, 200)
-//                     assert.isArray(res.body.novels)
-//                     assert.equal(res.body.novels.length, 0)
-//                     done()
-//                 })
-//         })
+    describe("TEST NOVEL REQUESTS", () => {
 
-//         it("returns a list of novels associated to the author", (done) => {
+        beforeEach( done => {
+            Novel.sync({force: true})
+                .then( () => {
+                    Novel.create(idoru)
+                        .then( () => done() )
+                        .catch( err => { console.log(err); done() })
+                })
+                .catch( err => console.log(err) )
 
-//             Novel.create({name: "Idoru", year: "2323", authorId: 1})
-//                 .then( () => {
+        })
 
-//                     request.get('/api/authors/1/novels')
-//                         .end((err, res) => {
-//                             assert.equal(res.statusCode, 200)
-//                             assert.isObject(res.body)
-//                             assert.property(res.body, "count")
-//                             assert.property(res.body, "novels")
-//                             assert.isArray(res.body.novels)
-//                             done()
-//                         })
-//                 })
-//                 .catch( err => {console.log(err.errors); done()})
-//         })
-//     })
+        it("returns the req.body object with the correct id - POST", done => {
+            request.post('/api/novels')
+                .send({name: "Virtual Light"})
+                .end( (err, res) => {
+                    assert.equal(res.body.id, 1)
+                    assert.equal(res.body.name, "Virtual Light")
+                    assert.notProperty(res.body, 'year')
+                })
 
-//     describe("Test POST /api/authors/", () => {
+            request.get('/api/novels/12')
+                .end( (err, res ) => {
+                    assert.propertyVal(res.body, 'name', 'Idoru')
+                    assert.propertyVal(res.body, 'plot', 'Unknown')
+                    done()
+                })
 
-//         let sterling  = { name: "Bruce Sterling" }
-//         let asimov    = { name: "Isaac Asimov" }
+        })
 
-//         beforeEach( done => {
+        it("returns the req.body object with the correct id - PUT", done => {
+            request.put('/api/novels/12')
+                .send({name: "Pattern Recognition", year: 2003})
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'id', 1)
+                    assert.propertyVal(res.body, 'name', "Pattern Recognition")
+                    assert.notProperty(res.body, 'plot')
+                })
 
-//             Author.create(asimov)
-//                 .then( c => done())
-//                 .catch( e => { console.log("Shit happened, figure it out" + e); done() } )
-//         })
+            request.get('/api/novels/12')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'Idoru')
+                    assert.propertyVal(res.body, 'plot', 'Unknown')
+                    done()
+                })
 
-//         it("successfully saves the resource to the DB", (done) => {
+        })
 
-//             request.post('/api/authors')
-//                .send(sterling)
-//                .end( (err, res) => {
-//                    assert.isTrue(res.ok)
-//                    assert.isFalse(res.error)
-//                    assert.equal(res.statusCode, 201)
-//                    assert.property(res.body, 'author')
-//                    assert.equal(res.body.author.nationality, "Unknown")
-//                    assert.include(res.headers.location, `/api/authors/${res.body.author.id}`)
-//                    done()
-//                 })
-//         })
+        it("returns the req.body object with the correct id - PATCH", done => {
+            request.patch('/api/novels/12')
+                .send({name: "Count Zero"})
+                .end( (err, res) => {
+                    assert.equal(res.body.id, 1)
+                    assert.equal(res.body.name, "Count Zero")
+                    assert.notProperty(res.body, 'year')
+                })
 
-//         it("Returns a 409 when passed an already existing author", (done) => {
+            request.get('/api/novels/12')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'Idoru')
+                    assert.propertyVal(res.body, 'plot', 'Unknown')
+                    done()
+                })
 
-//             request.post('/api/authors')
-//                 .send(asimov)
-//                 .end( (err, res) => {
-//                     assert.equal(res.statusCode, 409)
-//                     assert.property(res.body, 'type')
-//                     assert.equal(res.body.type, 'error')
-//                     assert.equal(res.body.message, 'A resource with the following fields already exists in the database.')
-//                     assert.isArray(res.body.fields)
-//                     done()
-//                 })
-//         })
+        })
 
-//         it("Returns a 422 when missing one or more required fields", (done) => {
+        it("returns the req.body object with the correct id - DELETE", done => {
+            request.delete('/api/novels/12')
+                .end( (err, res) => {
+                    assert.equal(res.statusCode, 204)
+                })
 
-//             fakeAuthor = { nationality: "French" }
+            request.get('/api/novels/12')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'Idoru')
+                    assert.propertyVal(res.body, 'plot', 'Unknown')
+                    done()
+                })
 
-//             request.post('/api/authors')
-//                 .send(fakeAuthor)
-//                 .end( (err, res) => {
-//                     assert.equal(res.statusCode, 422)
-//                     assert.property(res.body, 'type')
-//                     assert.equal(res.body.type, 'error')
-//                     assert.equal(res.body.message, 'Missing required fields.')
-//                     assert.isArray(res.body.fields)
-//                     done()
-//                 })
-//         })
-//     })
+        })
 
-//     describe("Test PUT /api/authors/id", () => {
+    })
 
-//         it("returns a 400 when passing an incomplete payload", (done) => {
-//            request.put(`/api/authors/1`)
-//                .send({nationality: "Canadian"})
-//                .end( (err, res) => {
-//                    assert.equal(res.statusCode, 400)
-//                    assert.equal(res.body.statusCode, 400)
-//                    assert.property(res.body,'type')
-//                    assert.equal(res.body.message, "Bad request. Please provide all the fields")
-//                    done()
-//                })
-//         })
+    describe("TEST AUTHOR REQUESTS", () => {
 
-//         it("returns a 200 when passing a complete payload", (done) => {
+        beforeEach( done => {
+            Author.sync({force: true})
+                .then( () => {
+                    Author.create(author)
+                        .then( () => done() )
+                        .catch( err => { console.log(err); done() })
+                })
+                .catch( err => console.log(err) )
 
-//             request.put(`/api/authors/1`)
-//                .send({ name: "Fanfan la tulipe", nationality: "Mexican" })
-//                .end( (err, res) => {
-//                    assert.equal(res.statusCode, 200)
-//                    assert.equal(res.body.statusCode, 200)
-//                    assert.property(res.body, "message")
-//                    assert.equal(res.body.message, "Author successfully updated")
-//                    done()
-//                })
+        })
 
-//         })
-//     })
+        it("returns the req.body object with the correct id - POST", done => {
+            request.post('/api/authors')
+                .send({name: "Bruce Sterling"})
+                .end( (err, res) => {
+                    assert.equal(res.body.id, 1)
+                    assert.equal(res.body.name, "Bruce Sterling")
+                    assert.notProperty(res.body, 'nationality')
+                })
 
-//     describe("Test PATCH /api/authors/:id", () => {
+            request.get('/api/authors/45')
+                .end( (err, res ) => {
+                    assert.propertyVal(res.body, 'name', 'William Gibson')
+                    done()
+                })
 
-//         it("should return a 200 when successful", done => {
+        })
 
-//             request.patch(`/api/authors/1`)
-//                 .send({name: "Bennnnnz"})
-//                 .end( (err, res) => {
-//                     assert.equal(res.statusCode, 200)
-//                     assert.equal(res.body.statusCode, 200)
-//                     assert.property(res.body, "type")
-//                     assert.equal(res.body.type, "success")
-//                     assert.property(res.body, "message")
-//                     assert.equal(res.body.message, "Update successful")
-//                     done()
-//                 })
-//             })
-//     })
+        it("returns the req.body object with the correct id - PUT", done => {
+            request.put('/api/authors/45')
+                .send({name: "Neal S."})
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'id', 1)
+                    assert.propertyVal(res.body, 'name', "Neal S.")
+                    assert.notProperty(res.body, 'nationality')
+                })
 
-//     describe("Test DELETE /api/authors/:id", () => {
+            request.get('/api/authors/45')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'William Gibson')
+                    done()
+                })
 
-//         it("should return a 204 when successful", done => {
-//                 request.delete(`/api/authors/1`)
-//                     .end( (err, res) => {
-//                     assert.equal(res.statusCode, 204)
-//                     done()
-//                 })
-//         })
-//     })
-// })
+        })
+
+        it("returns the req.body object with the correct id - PATCH", done => {
+            request.patch('/api/authors/45')
+                .send({name: "Rudy Rucker"})
+                .end( (err, res) => {
+                    assert.equal(res.body.id, 1)
+                    assert.equal(res.body.name, "Rudy Rucker")
+                    assert.notProperty(res.body, 'nationality')
+                })
+
+            request.get('/api/authors/45')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'William Gibson')
+                    done()
+                })
+
+        })
+
+        it("returns the req.body object with the correct id - DELETE", done => {
+            request.delete('/api/authors/45')
+                .end( (err, res) => {
+                    assert.equal(res.statusCode, 204)
+                })
+
+            request.get('/api/authors/45')
+                .end( (err, res) => {
+                    assert.propertyVal(res.body, 'name', 'William Gibson')
+                    done()
+                })
+
+        })
+
+    })
+
+})

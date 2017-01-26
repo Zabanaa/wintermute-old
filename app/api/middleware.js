@@ -15,8 +15,15 @@ const checkAuth = (req, res, next) => {
         }
 
         if (!res.locals.authenticated) {
-            req.body.id = 1
-            return res.json(req.body)
+
+            if(method === "DELETE") {
+                return res.status(204).end()
+            }
+
+            let response = req.body
+            response.id  = req.params.id ? req.params.id : 1
+            return res.json(response)
+
         }
 
     }
