@@ -32,7 +32,7 @@ app.use('/api/novels', api.novelEndpoints)
 app.use('/api/authors', api.authorEndpoints)
 
 app.get('/', (req, res) => {
-    return res.render('index', {title: "hello"})
+    return res.render('index', {ga_tracking_code: process.env.GA_WINTERMUTE})
 })
 
 // Start app
