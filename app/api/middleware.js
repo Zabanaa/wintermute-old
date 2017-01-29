@@ -11,6 +11,13 @@ const checkAuth = (req, res, next) => {
 
             if (headers["x-access-token"] === secretToken) {
                 res.locals.authenticated = true
+            } else {
+
+                return res.status(401).json({
+                    "type": "error",
+                    "statusCode": 401,
+                    "message": "Error. Invalid Access Token"
+                })
             }
         }
 

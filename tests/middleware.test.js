@@ -17,6 +17,23 @@ let _case       = {id: 24, name: "Case"}
 
 describe("TEST unauthenticated routes", () => {
 
+    describe("Pass in the wrong access token", done => {
+
+        it("it returns a 401 when passed a wrong token", done => {
+
+            request.post("/api/characters")
+                .send({"name": "Molly Millions"})
+                .set("X-Access-Token", "somefaketoken")
+                .end( (err, res) => {
+                    assert.equal(res.statusCode, 401)
+                    assert.propertyVal(res.body,"type", "error")
+                    assert.include(res.body.message, "Invalid Access Token")
+                    done()
+                })
+
+        })
+
+    })
 
     describe("TEST CHARACTER REQUESTS", () => {
 
